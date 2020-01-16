@@ -32,7 +32,7 @@
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetWeatherForecasts")]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();

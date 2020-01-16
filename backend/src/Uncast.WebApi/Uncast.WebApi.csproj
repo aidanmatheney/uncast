@@ -18,5 +18,9 @@
     <ProjectReference Include="..\Uncast.Data.Services\Uncast.Data.Services.csproj" />
   </ItemGroup>
 
+  <Target Name="SwaggerToFile" AfterTargets="AfterBuild">
+    <Exec Command="CMD /C IF NOT EXIST &quot;../../bin/&quot; MKDIR &quot;../../bin&quot;" />
+    <Exec Command="dotnet swagger tofile --output &quot;../../bin/WebApiSwagger.json&quot; &quot;$(TargetPath)&quot; v1" />
+  </Target>
 
 </Project>

@@ -19,6 +19,8 @@ namespace Uncast.WebApi
 
     internal sealed class Startup
     {
+        private const string DevelopmentCorsPolicyName = "DevelopmentCorsPolicy";
+
         public Startup(IConfiguration configuration)
         {
             ThrowIf.Null(configuration, nameof(configuration));
@@ -32,6 +34,11 @@ namespace Uncast.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(DevelopmentCorsPolicyName, policy => policy.WithOrigins("http://localhost:3000"));
+            });
 
             services.AddSwaggerGen(options =>
             {
@@ -67,6 +74,8 @@ namespace Uncast.WebApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(DevelopmentCorsPolicyName);
 
             app.UseEndpoints(endpoints =>
             {

@@ -27,7 +27,7 @@
         /// <summary>
         ///     Get all library RSS podcasts.
         /// </summary>
-        [HttpGet("LibraryRssPodcasts")]
+        [HttpGet("LibraryRssPodcasts", Name = "GetLibraryRssPodcasts")]
         public async Task<IList<LibraryRssPodcast>> GetLibraryRssPodcastsAsync(CancellationToken cancellationToken)
         {
             var podcasts = await _podcastService.GetLibraryRssPodcastsAsync(cancellationToken);
@@ -40,7 +40,7 @@
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
         /// <returns>The podcast, or null.</returns>
-        [HttpGet("LibraryRssPodcast")]
+        [HttpGet("LibraryRssPodcast", Name = "GetLibraryRssPodcast")]
         public async Task<LibraryRssPodcast> GetLibraryRssPodcastAsync(int id, CancellationToken cancellationToken)
         {
             var podcast = await _podcastService.GetLibraryRssPodcastAsync(id, cancellationToken);
