@@ -4,7 +4,7 @@ import * as serviceWorker from './serviceWorker';
 
 import './index.css';
 
-import App from './App';
+import App from './components/App';
 
 declare global {
   interface NodeModule {
@@ -21,8 +21,8 @@ const render = (Component: ComponentType) => {
 render(App);
 
 if (module.hot) {
-  module.hot.accept('./App', async () => {
-    const NextApp = (await import('./App')).default;
+  module.hot.accept('./components/App', async () => {
+    const NextApp = (await import('./components/App')).default;
     render(NextApp);
   })
 }

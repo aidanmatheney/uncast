@@ -1,34 +1,36 @@
 import React, { FunctionComponent } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
-import { LibraryRssPodcast } from './api';
+import { LibraryRssPodcast } from '../../api';
 import PodcastCard from './PodcastCard';
 
-const Pane = styled.div`
+const Container = styled.div`
+  background: #35363A;
+  height: 100%;
+
   display: flex;
   flex-direction: row;
-
-  margin: -0.5rem;
+  flex-wrap: wrap;
 `;
 
 const CardContainer = styled.div`
   margin: 0.5rem;
 `;
 
-const PodcastGrid: FunctionComponent<{
-  podcasts: LibraryRssPodcast[];
+const Library: FunctionComponent<{
+  podcasts: LibraryRssPodcast[] | null;
 }> = ({
   podcasts
 }) => {
   return (
-    <Pane>
-      {podcasts.map(p => (
+    <Container>
+      {podcasts && podcasts.map(p => (
         <CardContainer key={p.id}>
           <PodcastCard podcast={p} />
         </CardContainer>
       ))}
-    </Pane>
+    </Container>
   );
 };
 
-export default PodcastGrid
+export default Library;

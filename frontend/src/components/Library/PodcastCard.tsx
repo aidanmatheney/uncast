@@ -4,16 +4,18 @@ import styled from 'styled-components/macro';
 import { useGet } from 'restful-react';
 import { xml2js } from 'xml-js';
 
-import { LibraryRssPodcast }  from './api';
+import { LibraryRssPodcast }  from '../../api';
 
 const Container = styled.div`
-  width: 5rem;
-  height: 5rem;
+  width: 10rem;
+  height: 10rem;
 `;
 
 const Img = styled.img`
   max-width: 100%;
   max-height: 100%;
+
+  border-radius: 4px;
 `;
 
 const PodcastCard: FunctionComponent<{
