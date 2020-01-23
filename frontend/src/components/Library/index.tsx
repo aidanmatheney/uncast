@@ -8,9 +8,9 @@ const Container = styled.div`
   background: #35363A;
   height: 100%;
 
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  align-content: start;
 `;
 
 const CardContainer = styled.div`

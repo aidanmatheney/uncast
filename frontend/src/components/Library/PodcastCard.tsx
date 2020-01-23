@@ -6,10 +6,7 @@ import { xml2js } from 'xml-js';
 
 import { LibraryRssPodcast }  from '../../api';
 
-const Container = styled.div`
-  width: 10rem;
-  height: 10rem;
-`;
+const Container = styled.div``;
 
 const Img = styled.img`
   max-width: 100%;

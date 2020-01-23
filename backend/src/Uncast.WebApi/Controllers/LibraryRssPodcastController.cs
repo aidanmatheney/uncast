@@ -11,13 +11,11 @@
     using Uncast.Data.Services;
     using Uncast.Utils;
 
-    [ApiController]
-    [Route("/api/[controller]")]
-    public sealed class PodcastsController : ControllerBase
+    public sealed class LibraryRssPodcastController : HomeControllerBase
     {
         private readonly IPodcastService _podcastService;
 
-        public PodcastsController(IPodcastService podcastService)
+        public LibraryRssPodcastController(IPodcastService podcastService)
         {
             ThrowIf.Null(podcastService, nameof(podcastService));
 
@@ -27,8 +25,8 @@
         /// <summary>
         ///     Get all library RSS podcasts.
         /// </summary>
-        [HttpGet("LibraryRssPodcasts", Name = "GetLibraryRssPodcasts")]
-        public async Task<IList<LibraryRssPodcast>> GetLibraryRssPodcastsAsync(CancellationToken cancellationToken)
+        [HttpGet]
+        public async Task<IList<LibraryRssPodcast>> GetLibraryRssPodcasts(CancellationToken cancellationToken)
         {
             var podcasts = await _podcastService.GetLibraryRssPodcastsAsync(cancellationToken);
             return podcasts.ToList();
@@ -37,11 +35,8 @@
         /// <summary>
         ///     Get a library RSS podcast by ID.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>The podcast, or null.</returns>
-        [HttpGet("LibraryRssPodcast", Name = "GetLibraryRssPodcast")]
-        public async Task<LibraryRssPodcast> GetLibraryRssPodcastAsync(int id, CancellationToken cancellationToken)
+        [HttpGet("{id}")]
+        public async Task<LibraryRssPodcast> GetLibraryRssPodcastById(int id, CancellationToken cancellationToken)
         {
             var podcast = await _podcastService.GetLibraryRssPodcastAsync(id, cancellationToken);
             return podcast;

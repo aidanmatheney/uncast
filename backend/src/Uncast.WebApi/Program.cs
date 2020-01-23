@@ -9,11 +9,13 @@ namespace Uncast.WebApi
 
     internal static class Program
     {
+        private const string ConnectionStringEnvironmentVariableName = "UNCAST_WEBAPI_CONNECTIONSTRING";
+
         private static void Main(string[] args)
         {
-            var connectionString = Environment.GetEnvironmentVariable("UNCAST_WEBAPI_CONNECTIONSTRING");
+            var connectionString = Environment.GetEnvironmentVariable(ConnectionStringEnvironmentVariableName);
             if (connectionString is null)
-                throw new InvalidOperationException("UNCAST_WEBAPI_CONNECTIONSTRING environment variable is not set");
+                throw new InvalidOperationException($"{ConnectionStringEnvironmentVariableName} environment variable is not set");
             var migrator = new Migrator(connectionString);
             if (migrator.IsUpgradeRequired())
                 throw new InvalidOperationException("The database requires upgrades. Run Uncast.Data.Migrations to execute the new change scripts.");

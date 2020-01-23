@@ -5,11 +5,13 @@
 
     internal static class Program
     {
+        private const string ConnectionStringEnvironmentVariableName = "UNCAST_WEBAPI_CONNECTIONSTRING";
+
         private static int Main(string[] args)
         {
-            var connectionString = args.FirstOrDefault() ?? Environment.GetEnvironmentVariable("UNCAST_MIGRATIONS_CONNECTIONSTRING");
+            var connectionString = args.FirstOrDefault() ?? Environment.GetEnvironmentVariable(ConnectionStringEnvironmentVariableName);
             if (connectionString is null)
-                throw new InvalidOperationException("No connection string was specified as an argument to the program, and the UNCAST_MIGRATIONS_CONNECTIONSTRING environment variable is not set");
+                throw new InvalidOperationException($"No connection string was specified as an argument to the program, and the {ConnectionStringEnvironmentVariableName} environment variable is not set");
 
             var migrator = new Migrator(connectionString);
             var result = migrator.Upgrade();

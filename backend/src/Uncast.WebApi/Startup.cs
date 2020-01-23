@@ -7,6 +7,8 @@ namespace Uncast.WebApi
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc.Abstractions;
+    using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
@@ -19,6 +21,7 @@ namespace Uncast.WebApi
 
     internal sealed class Startup
     {
+        private const string ConnectionStringEnvironmentVariableName = "UNCAST_WEBAPI_CONNECTIONSTRING";
         private const string DevelopmentCorsPolicyName = "DevelopmentCorsPolicy";
 
         public Startup(IConfiguration configuration)
@@ -48,14 +51,22 @@ namespace Uncast.WebApi
                     Version = "v1"
                 });
 
+                options.CustomOperationIds(api =>
+                {
+                    if (api.ActionDescriptor is ControllerActionDescriptor controllerAction)
+                        return controllerAction.ActionName;
+
+                    throw new InvalidOperationException($"Unknown {nameof(ActionDescriptor)} type: {api.ActionDescriptor.GetType()}");
+                });
+
                 var docFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var docFilePath = Path.Combine(AppContext.BaseDirectory, docFileName);
                 options.IncludeXmlComments(docFilePath);
             });
 
-            var connectionString = Environment.GetEnvironmentVariable("UNCAST_WEBAPI_CONNECTIONSTRING");
+            var connectionString = Environment.GetEnvironmentVariable(ConnectionStringEnvironmentVariableName);
             if (connectionString is null)
-                throw new InvalidOperationException("UNCAST_WEBAPI_CONNECTIONSTRING environment variable is not set");
+                throw new InvalidOperationException($"{ConnectionStringEnvironmentVariableName} environment variable is not set");
             services.AddScoped<IDbConnection>(serviceProvider => new MySqlConnection(connectionString));
 
             services.AddScoped<IPodcastService, PodcastService>();

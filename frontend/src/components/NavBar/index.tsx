@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import styled, { css } from "styled-components";
 
-import { TabId } from '../../TabId';
+import TabId from '../../TabId';
 
 import {
   FaHome,
@@ -31,22 +31,22 @@ const TextContainer = styled.div``;
 
 
 const TabDescriptions: {
-  tab: TabId,
-  name: string,
-  Icon: IconType
+  tab: TabId;
+  name: string;
+  Icon: IconType;
 }[] = [
   {
-    tab: 'library',
+    tab: TabId.Library,
     name: 'Library',
     Icon: FaHome
   },
   {
-    tab: 'catalog',
+    tab: TabId.Catalog,
     name: 'Catalog',
     Icon: FaCloud
   },
   {
-    tab: 'profile',
+    tab: TabId.Profile,
     name: 'Profile',
     Icon: FaUser
   }
@@ -66,7 +66,7 @@ const NavBar: FunctionComponent<{
         const isActive = activeTab === tab;
 
         return (
-          <Button isActive={isActive} onClick={() => onTabClick?.(tab)}>
+          <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
             <IconContainer><Icon /></IconContainer>
             <TextContainer>{name}</TextContainer>
           </Button>

@@ -11,7 +11,7 @@ import Catalog from './Catalog';
 import Profile from './Profile';
 import NavBar from './NavBar';
 
-import { TabId } from '../TabId';
+import TabId from '../TabId';
 
 const Container = styled.div`
   height: 100vh;
@@ -27,7 +27,7 @@ const NavBarPane = styled.div``;
 
 
 const App: FunctionComponent = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('library');
+  const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
 
   const { data: podcasts, loading, error } = useGetLibraryRssPodcasts({ });
 

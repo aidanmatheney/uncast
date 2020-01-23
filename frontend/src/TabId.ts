@@ -1,1 +1,7 @@
-export type TabId = 'library' | 'catalog' | 'profile';
+enum TabId {
+  Library,
+  Catalog,
+  Profile
+};
+
+export default TabId;

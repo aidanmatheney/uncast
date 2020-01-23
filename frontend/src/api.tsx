@@ -10,13 +10,6 @@ export interface LibraryRssPodcast {
   id?: number;
 }
 
-export interface WeatherForecast {
-  date?: string;
-  temperatureC?: number;
-  temperatureF?: number;
-  summary?: string | null;
-}
-
 export type GetLibraryRssPodcastsProps = Omit<GetProps<LibraryRssPodcast[], unknown, void>, "path">;
 
 /**
@@ -24,7 +17,7 @@ export type GetLibraryRssPodcastsProps = Omit<GetProps<LibraryRssPodcast[], unkn
  */
 export const GetLibraryRssPodcasts = (props: GetLibraryRssPodcastsProps) => (
   <Get<LibraryRssPodcast[], unknown, void>
-    path={`/api/Podcasts/LibraryRssPodcasts`}
+    path={`/api/LibraryRssPodcast`}
     {...props}
   />
 );
@@ -34,43 +27,25 @@ export type UseGetLibraryRssPodcastsProps = Omit<UseGetProps<LibraryRssPodcast[]
 /**
  * Get all library RSS podcasts.
  */
-export const useGetLibraryRssPodcasts = (props: UseGetLibraryRssPodcastsProps) => useGet<LibraryRssPodcast[], unknown, void>(`/api/Podcasts/LibraryRssPodcasts`, props);
+export const useGetLibraryRssPodcasts = (props: UseGetLibraryRssPodcastsProps) => useGet<LibraryRssPodcast[], unknown, void>(`/api/LibraryRssPodcast`, props);
 
 
-export interface GetLibraryRssPodcastQueryParams {
-  id?: number;
-}
-
-export type GetLibraryRssPodcastProps = Omit<GetProps<LibraryRssPodcast, unknown, GetLibraryRssPodcastQueryParams>, "path">;
+export type GetLibraryRssPodcastByIdProps = Omit<GetProps<LibraryRssPodcast, unknown, void>, "path"> & {id: number};
 
 /**
  * Get a library RSS podcast by ID.
  */
-export const GetLibraryRssPodcast = (props: GetLibraryRssPodcastProps) => (
-  <Get<LibraryRssPodcast, unknown, GetLibraryRssPodcastQueryParams>
-    path={`/api/Podcasts/LibraryRssPodcast`}
+export const GetLibraryRssPodcastById = ({id, ...props}: GetLibraryRssPodcastByIdProps) => (
+  <Get<LibraryRssPodcast, unknown, void>
+    path={`/api/LibraryRssPodcast/${id}`}
     {...props}
   />
 );
 
-export type UseGetLibraryRssPodcastProps = Omit<UseGetProps<LibraryRssPodcast, GetLibraryRssPodcastQueryParams>, "path">;
+export type UseGetLibraryRssPodcastByIdProps = Omit<UseGetProps<LibraryRssPodcast, void>, "path"> & {id: number};
 
 /**
  * Get a library RSS podcast by ID.
  */
-export const useGetLibraryRssPodcast = (props: UseGetLibraryRssPodcastProps) => useGet<LibraryRssPodcast, unknown, GetLibraryRssPodcastQueryParams>(`/api/Podcasts/LibraryRssPodcast`, props);
-
-
-export type GetWeatherForecastsProps = Omit<GetProps<WeatherForecast[], unknown, void>, "path">;
-
-export const GetWeatherForecasts = (props: GetWeatherForecastsProps) => (
-  <Get<WeatherForecast[], unknown, void>
-    path={`/api/WeatherForecast`}
-    {...props}
-  />
-);
-
-export type UseGetWeatherForecastsProps = Omit<UseGetProps<WeatherForecast[], void>, "path">;
-
-export const useGetWeatherForecasts = (props: UseGetWeatherForecastsProps) => useGet<WeatherForecast[], unknown, void>(`/api/WeatherForecast`, props);
+export const useGetLibraryRssPodcastById = ({id, ...props}: UseGetLibraryRssPodcastByIdProps) => useGet<LibraryRssPodcast, unknown, void>(`/api/LibraryRssPodcast/${id}`, props);
 
