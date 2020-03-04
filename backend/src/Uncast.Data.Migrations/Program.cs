@@ -1,19 +1,25 @@
 ﻿namespace Uncast.Data.Migrations
 {
+    using MySql.Data.MySqlClient;
     using System;
     using System.Linq;
 
     internal static class Program
     {
-        private const string ConnectionStringEnvironmentVariableName = "UNCAST_WEBAPI_CONNECTIONSTRING";
+        private const string ConnectionStringEnvironmentVariableName = "UNCAST_MIGRATIONS_CONNECTIONSTRING";
 
         private static int Main(string[] args)
         {
-            var connectionString = args.FirstOrDefault() ?? Environment.GetEnvironmentVariable(ConnectionStringEnvironmentVariableName);
-            if (connectionString is null)
+            var baseConnectionString = args.FirstOrDefault() ?? Environment.GetEnvironmentVariable(ConnectionStringEnvironmentVariableName);
+            if (baseConnectionString is null)
                 throw new InvalidOperationException($"No connection string was specified as an argument to the program, and the {ConnectionStringEnvironmentVariableName} environment variable is not set");
 
-            var migrator = new Migrator(connectionString);
+            var connectionString = new MySqlConnectionStringBuilder(baseConnectionString)
+            {
+                AllowUserVariables = true
+            };
+
+            var migrator = new Migrator(connectionString.ToString());
             var result = migrator.Upgrade();
 
             if (!result.Successful)

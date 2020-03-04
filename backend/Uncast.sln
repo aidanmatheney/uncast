@@ -5,13 +5,21 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.WebApi", "src\Uncast.WebApi\Uncast.WebApi.csproj", "{48872B63-511C-44EB-836D-96DFB9C82D91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncast.Data.Migrations", "src\Uncast.Data.Migrations\Uncast.Data.Migrations.csproj", "{34D8CDD7-4DA3-4B04-B530-2D0EBEE6ABE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.Data.Migrations", "src\Uncast.Data.Migrations\Uncast.Data.Migrations.csproj", "{34D8CDD7-4DA3-4B04-B530-2D0EBEE6ABE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncast.Data.Services", "src\Uncast.Data.Services\Uncast.Data.Services.csproj", "{B8C83847-5E33-4765-B339-D53730FAD34F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.Data.Services", "src\Uncast.Data.Services\Uncast.Data.Services.csproj", "{B8C83847-5E33-4765-B339-D53730FAD34F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncast.Data.Entities", "src\Uncast.Data.Entities\Uncast.Data.Entities.csproj", "{B83A60AC-C2D0-4B4B-9579-35BDF2DCFD63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.Utils", "src\Uncast.Utils\Uncast.Utils.csproj", "{B7070949-EB67-4C80-8A8A-F3ED017E9E0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncast.Utils", "src\Uncast.Utils\Uncast.Utils.csproj", "{B7070949-EB67-4C80-8A8A-F3ED017E9E0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.Data", "src\Uncast.Data\Uncast.Data.csproj", "{499850B2-0079-4D42-BCCF-1B149146C5C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.Services", "src\Uncast.Services\Uncast.Services.csproj", "{9E3BCC23-5895-4C6B-9E4E-CC060BBE1A76}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.Entities", "src\Uncast.Entities\Uncast.Entities.csproj", "{9130D758-C4B3-4E4B-A9F8-6B7FE64CC297}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uncast.Data.Naming", "src\Uncast.Data.Naming\Uncast.Data.Naming.csproj", "{18073492-169E-49F8-80C5-BB8A6619A918}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uncast.Tests", "src\Uncast.Tests\Uncast.Tests.csproj", "{380ECD79-F73D-40C5-BA8D-14CF6680FCFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +39,30 @@ Global
 		{B8C83847-5E33-4765-B339-D53730FAD34F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8C83847-5E33-4765-B339-D53730FAD34F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8C83847-5E33-4765-B339-D53730FAD34F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B83A60AC-C2D0-4B4B-9579-35BDF2DCFD63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B83A60AC-C2D0-4B4B-9579-35BDF2DCFD63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B83A60AC-C2D0-4B4B-9579-35BDF2DCFD63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B83A60AC-C2D0-4B4B-9579-35BDF2DCFD63}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7070949-EB67-4C80-8A8A-F3ED017E9E0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B7070949-EB67-4C80-8A8A-F3ED017E9E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7070949-EB67-4C80-8A8A-F3ED017E9E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7070949-EB67-4C80-8A8A-F3ED017E9E0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{499850B2-0079-4D42-BCCF-1B149146C5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{499850B2-0079-4D42-BCCF-1B149146C5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{499850B2-0079-4D42-BCCF-1B149146C5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{499850B2-0079-4D42-BCCF-1B149146C5C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3BCC23-5895-4C6B-9E4E-CC060BBE1A76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3BCC23-5895-4C6B-9E4E-CC060BBE1A76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3BCC23-5895-4C6B-9E4E-CC060BBE1A76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3BCC23-5895-4C6B-9E4E-CC060BBE1A76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9130D758-C4B3-4E4B-A9F8-6B7FE64CC297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9130D758-C4B3-4E4B-A9F8-6B7FE64CC297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9130D758-C4B3-4E4B-A9F8-6B7FE64CC297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9130D758-C4B3-4E4B-A9F8-6B7FE64CC297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18073492-169E-49F8-80C5-BB8A6619A918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18073492-169E-49F8-80C5-BB8A6619A918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18073492-169E-49F8-80C5-BB8A6619A918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18073492-169E-49F8-80C5-BB8A6619A918}.Release|Any CPU.Build.0 = Release|Any CPU
+		{380ECD79-F73D-40C5-BA8D-14CF6680FCFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{380ECD79-F73D-40C5-BA8D-14CF6680FCFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{380ECD79-F73D-40C5-BA8D-14CF6680FCFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{380ECD79-F73D-40C5-BA8D-14CF6680FCFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

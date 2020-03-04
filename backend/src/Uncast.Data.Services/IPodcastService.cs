@@ -4,12 +4,12 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Uncast.Data.Entities;
+    using Uncast.Entities;
 
     public interface IPodcastService
     {
         Task<IEnumerable<LibraryPodcast>> GetLibraryPodcastsAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<LibraryRssPodcast>> GetLibraryRssPodcastsAsync(CancellationToken cancellationToken = default);
-        Task<LibraryRssPodcast> GetLibraryRssPodcastAsync(int id, CancellationToken cancellationToken = default);
+        Task<LibraryRssPodcast?> FindLibraryRssPodcastByIdAsync(int id, CancellationToken cancellationToken = default);
     }
 }

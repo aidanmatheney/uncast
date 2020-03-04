@@ -1,22 +1,47 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn> <!-- Don't warn for no documentation on public types/members (enabled by GenerateDocumentationFile). -->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="3.1.2" />
+    <PackageReference Include="MySqlConnector" Version="0.62.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Uncast.Data.Migrations\Uncast.Data.Migrations.csproj" />
     <ProjectReference Include="..\Uncast.Data.Services\Uncast.Data.Services.csproj" />
+    <ProjectReference Include="..\Uncast.Services\Uncast.Services.csproj" />
   </ItemGroup>
+
+  <Target Name="CreateExternAliases" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <!--
+          Add an "extern alias" for MySql.Data to "MySql_Data". 
+          Without the alias, the build will fail, because this project references both MySql.Data and MySqlConnector, which both define many types with identical signatures in the same namespace.
+          
+          MySqlConnector is used everywhere possible because it has truly async methods.
+          MySql.Data is used in the the migrations project because it is a dependency of dbup-mysql.
+        
+          Sample errors:
+          The type 'MySqlConnectionStringBuilder' exists in both 'MySql.Data, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d' and 'MySqlConnector, Version=0.62.0.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92'
+          The type 'MySqlConnection' exists in both 'MySql.Data, Version=6.10.6.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d' and 'MySqlConnector, Version=0.62.0.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92'
+      -->
+      <ReferencePath Condition="'%(FileName)' == 'MySql.Data'">
+        <Aliases>MySql_Data</Aliases>
+      </ReferencePath>
+
+      <!-- Other extern aliases here. -->
+    </ItemGroup>
+  </Target>
 
   <Target Name="SwaggerToFile" AfterTargets="AfterBuild">
     <Exec Command="CMD /C IF NOT EXIST &quot;../../bin/&quot; MKDIR &quot;../../bin&quot;" />

@@ -2,9 +2,9 @@ import React, { ComponentType } from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 
-import './index.css';
+import App from './app/App';
 
-import App from './components/App';
+import './index.css';
 
 declare global {
   interface NodeModule {
@@ -15,16 +15,16 @@ declare global {
 };
 
 const render = (Component: ComponentType) => {
-    ReactDOM.render(<Component />, document.getElementById('root'));
+  ReactDOM.render(<Component />, document.getElementById('root'));
 };
 
 render(App);
 
 if (module.hot) {
-  module.hot.accept('./components/App', async () => {
-    const NextApp = (await import('./components/App')).default;
+  module.hot.accept('./app/App', async () => {
+    const NextApp = (await import('./app/App')).default;
     render(NextApp);
-  })
+  });
 }
 
 // If you want your app to work offline and load faster, you can change

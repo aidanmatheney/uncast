@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reduxjs/toolkit": "^1.3.0-alpha.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
@@ -10,14 +11,20 @@
     "@types/node": "^12.12.24",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
+    "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.3",
     "@types/styled-components": "^4.4.2",
     "babel-plugin-macros": "^2.8.0",
+    "connected-react-router": "^6.7.0",
+    "history": "^4.10.1",
+    "oidc-client": "^1.10.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-icons": "^3.8.0",
+    "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
+    "redux": "^4.0.5",
     "restful-react": "9.7.1",
     "styled-components": "^5.0.0",
     "typescript": "^3.7.4",
@@ -28,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate:apiClient": "restful-react import --file ../backend/bin/WebApiSwagger.json --output ./src/api.tsx"
+    "generate:apiClient": "restful-react import --file ../backend/bin/WebApiSwagger.json --output ./src/common/web-api/generated.tsx"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -1,8 +1,15 @@
 ﻿namespace Uncast.WebApi.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+
+    using Uncast.Entities;
+    using Uncast.WebApi.Mvc;
 
     [ApiController]
-    [Route("/api/[controller]")]
-    public abstract class HomeControllerBase : ControllerBase { }
+    public abstract class HomeControllerBase : AppControllerBase
+    {
+        protected HomeControllerBase(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, ILogger logger) : base(userManager, roleManager, logger) { }
+    }
 }

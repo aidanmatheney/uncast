@@ -1,81 +1,72 @@
 ﻿namespace Uncast.Data.Services
 {
     using System.Collections.Generic;
-    using System.Data;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Dapper;
+    using Microsoft.Extensions.Logging;
 
-    using Uncast.Data.Entities;
-    using Uncast.Utils;
+    using MySql.Data.MySqlClient;
 
-    public sealed class PodcastService : IPodcastService
+    using Uncast.Data.Naming;
+    using Uncast.Entities;
+
+    public sealed class PodcastService : DbServiceBase, IPodcastService
     {
-        private readonly IDbConnection _dbConnection;
-
-        public PodcastService(IDbConnection dbConnection)
-        {
-            ThrowIf.Null(dbConnection, nameof(dbConnection));
-
-            _dbConnection = dbConnection;
-        }
+        public PodcastService(MySqlConnection dbConnection, ILogger<PodcastService> logger) : base(dbConnection, logger) { }
 
         public async Task<IEnumerable<LibraryPodcast>> GetLibraryPodcastsAsync(CancellationToken cancellationToken = default)
         {
-            using var reader = await _dbConnection.QueryMultipleAsync(new CommandDefinition
+            using var reader = await QueryMultipleAsync
             (
-                commandText:
-                @"
+                $@"
 SELECT
     Id,
     Url
 
-    FROM LibraryRssPodcast
+    FROM {DbTable.LibraryRssPodcast}
 ;
                 ",
-                cancellationToken: cancellationToken
-            )).ConfigureAwait(false);
+                cancellationToken
+            ).ConfigureAwait(false);
 
             var rssPodcasts = await reader.ReadAsync<LibraryRssPodcast>().ConfigureAwait(false);
-            
+
             return rssPodcasts;
         }
 
         public async Task<IEnumerable<LibraryRssPodcast>> GetLibraryRssPodcastsAsync(CancellationToken cancellationToken = default)
         {
-            return await _dbConnection.QueryAsync<LibraryRssPodcast>(new CommandDefinition
+            return await QueryAsync<LibraryRssPodcast>
             (
-                commandText:
-                @"
+                $@"
 SELECT
     Id,
     Url
 
-    FROM LibraryRssPodcast
+    FROM {DbTable.LibraryRssPodcast}
 ;
                 ",
-                cancellationToken: cancellationToken
-            )).ConfigureAwait(false);
+                cancellationToken
+            ).ConfigureAwait(false);
         }
 
-        public async Task<LibraryRssPodcast> GetLibraryRssPodcastAsync(int id, CancellationToken cancellationToken = default)
-        { 
-            return await _dbConnection.QuerySingleOrDefaultAsync<LibraryRssPodcast>(new CommandDefinition
+        public async Task<LibraryRssPodcast?> FindLibraryRssPodcastByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await QuerySingleOrDefaultAsync<LibraryRssPodcast?>
             (
-                commandText:
-                @"
+                $@"
 SELECT
     Id,
     Url
 
-    FROM LibraryRssPodcast
+    FROM {DbTable.LibraryRssPodcast}
     WHERE Id = @id
 ;
                 ",
-                parameters: new { id },
-                cancellationToken: cancellationToken
-            )).ConfigureAwait(false);
+                new { id },
+                cancellationToken
+            ).ConfigureAwait(false);
         }
     }
 }
