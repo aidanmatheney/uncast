@@ -13,13 +13,13 @@ import SignOutError from './SignOutError';
 
 const sliceName = 'authentication';
 
-interface AuthenticationState {
+interface AuthenticationSliceState {
   user: User | null; // TODO: Only store a serializable subset of the User object created by oidc-client's UserManager
   signInError: SignInError | null;
   signOutError: SignOutError | null;
 }
 
-const initialState: AuthenticationState = {
+const initialState: AuthenticationSliceState = {
   user: null,
   signInError: null,
   signOutError: null
