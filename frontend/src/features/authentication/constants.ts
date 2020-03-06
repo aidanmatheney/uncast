@@ -1,4 +1,4 @@
-import { apiUrl } from "../../common/constants";
+import { apiUrl } from '../../common/constants';
 
 export const signInCallbackPath = `/authentication/sign-in-callback`;
 export const signOutCallbackPath = `/authentication/sign-out-callback`;

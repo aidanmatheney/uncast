@@ -1,5 +1,5 @@
-import React, { FunctionComponent } from "react";
-import styled, { css } from "styled-components";
+import React, { FunctionComponent } from 'react';
+import styled, { css } from 'styled-components';
 
 import TabId from '../../common/TabId';
 

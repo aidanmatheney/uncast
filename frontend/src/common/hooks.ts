@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useFetch, FetchOptions } from "react-async";
-import { RootState } from "../app/createRootReducer";
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useFetch, FetchOptions } from 'react-async';
+import { RootState } from '../app/createRootReducer';
 
 export const useUser = () => useSelector((state: RootState) => state.authentication.user);
 export const useAccessToken = () => useSelector((state: RootState) => state.authentication.user?.access_token);

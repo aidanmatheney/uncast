@@ -1,4 +1,4 @@
-import SignInOutData from "./SignInOutData";
+import SignInOutData from './SignInOutData';
 
 export default interface SignInOutArgs {
   response_type?: any;
