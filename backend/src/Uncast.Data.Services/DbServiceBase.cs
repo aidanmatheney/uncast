@@ -139,16 +139,22 @@
 
         #region Bulk copy
 
-        /// <summary>
-        /// Load rows into a temporary table in the database. The name of the table is automatically generated and can be accessed through <see cref="DbTempTableHandle.Name" />.
-        /// </summary>
-        protected async Task<DbTempTableHandle> TempTableAsync<TRow>(IEnumerable<TRow> rows, Action<DbTempTableBuilder<TRow>> configureTable, CancellationToken cancellationToken)
+        protected Task<DbTempTableHandle> TempTableAsync<TRow>(IEnumerable<TRow> rows, Action<DbTempTableBuilder<TRow>> configureTable, CancellationToken cancellationToken)
         {
-            ThrowIf.Null(rows, nameof(rows));
             ThrowIf.Null(configureTable, nameof(configureTable));
 
             var builder = new DbTempTableBuilder<TRow>();
             configureTable(builder);
+            return TempTableAsync(rows, builder, cancellationToken);
+        }
+
+        /// <summary>
+        /// Load rows into a temporary table in the database. The name of the table is automatically generated and can be accessed through <see cref="DbTempTableHandle.Name" />.
+        /// </summary>
+        protected async Task<DbTempTableHandle> TempTableAsync<TRow>(IEnumerable<TRow> rows, DbTempTableBuilder<TRow> builder, CancellationToken cancellationToken)
+        {
+            ThrowIf.Null(rows, nameof(rows));
+            ThrowIf.Null(builder, nameof(builder));
 
             var tableName = $"__TempTable_{Guid.NewGuid():N}";
 
@@ -177,11 +183,11 @@
                     };
                     await bulkCopy.WriteToServerAsync(dataTable, cancellationToken).ConfigureAwait(false);
 
-                    transaction.Commit();
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
                     Logger.LogError(ex, "Error loading rows into {tableName}", tableName);
                     throw;
                 }
