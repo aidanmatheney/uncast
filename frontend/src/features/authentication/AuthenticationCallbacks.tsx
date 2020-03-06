@@ -8,7 +8,7 @@ const SignInCallback: FunctionComponent = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(completeSignIn());
-  }, []);
+  }, [dispatch]);
 
   return (<></>);
 };
@@ -17,7 +17,7 @@ const SignOutCallback: FunctionComponent = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(completeSignOut());
-  }, []);
+  }, [dispatch]);
 
   return (<></>);
 };

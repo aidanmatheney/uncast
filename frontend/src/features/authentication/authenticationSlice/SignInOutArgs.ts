@@ -27,11 +27,13 @@ export default interface SignInOutArgs {
   skipUserInfo?: any;
 
   useReplaceToNavigate?: boolean;
+  silentRequestTimeout?: number;
 }
 
 export const createSignInOutArgs = () => {
   const args: SignInOutArgs = {
     useReplaceToNavigate: true,
+    silentRequestTimeout: 5000,
     state: {
       returnUrl: `${window.location.pathname}${window.location.search}${window.location.hash}`
     }

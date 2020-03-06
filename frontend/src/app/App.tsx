@@ -2,12 +2,9 @@ import React, { FunctionComponent, useState, useEffect } from 'react';
 import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
-import { RestfulProvider } from 'restful-react';
 import styled from 'styled-components/macro';
 
 import createStore, { history } from './createStore';
-import { useGetLibraryRssPodcasts } from '../common/web-api';
-import { useAuthenticatedRequestOptions } from '../common/hooks';
 import { loadUser } from '../features/authentication/authenticationSlice';
 
 import AuthenticationMenu from '../features/authentication/AuthenticationMenu';
@@ -38,30 +35,18 @@ const App: FunctionComponent = () => {
 
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
 
-  const authentication = useSelector((state: RootState) => state.authentication);
-  const requestOptions = useAuthenticatedRequestOptions();
-  const { data: podcasts, loading, error } = useGetLibraryRssPodcasts({ requestOptions });
+  const user = useSelector((state: RootState) => state.authentication.user);
 
   useEffect(() => {
     // Try to load the user from storage when the app is mounted
     dispatch(loadUser());
-  }, []);
-
-  if (error) {
-    console.error('useGetLibraryRssPodcasts error:', error);
-  }
+  }, [dispatch]);
 
   return (
     <Container>
       <ActivityPane>
-        <Switch>
-          <Route exact path="/" render={() => (
-            <Library podcasts={podcasts} />
-            /*
-              {loading && 'Podcast grid loading'}
-              {error && `Error fetching podcasts: ${JSON.stringify(error)}`}
-            */
-          )} />
+        {user && (<Switch>
+          <Route exact path="/" component={Library} />
           <Route exact path="/catalog" component={Catalog} />
           <Route exact path="/profile" component={Profile} />
 
@@ -73,7 +58,7 @@ const App: FunctionComponent = () => {
               </div>
             );
           }} />
-        </Switch>
+        </Switch>)}
       </ActivityPane>
 
       <NavBarPane>
@@ -88,17 +73,9 @@ const WrappedApp: typeof App = props => (
   <ReduxProvider store={store}>
     <ConnectedRouter history={history}>
       <BrowserRouter>
-        <RestfulProvider
-          base="https://localhost:5001"
-          onError={(err, retry, response) => {
-            debugger;
-            console.error('REST error:', { err, retry, response });
-          }}
-        >
-          <AuthenticationCallbacks>
-            <App {...props} />
-          </AuthenticationCallbacks>
-        </RestfulProvider>
+        <AuthenticationCallbacks>
+          <App {...props} />
+        </AuthenticationCallbacks>
       </BrowserRouter>
     </ConnectedRouter>
   </ReduxProvider>

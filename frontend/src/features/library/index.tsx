@@ -17,11 +17,9 @@ const CardContainer = styled.div`
   margin: 0.5rem;
 `;
 
-const Library: FunctionComponent<{
-  podcasts: LibraryRssPodcast[] | null;
-}> = ({
-  podcasts
-}) => {
+const Library: FunctionComponent = () => {
+  const podcasts: LibraryRssPodcast[] = []; // TODO: Select from redux store
+
   return (
     <Container>
       {podcasts && podcasts.map(p => (

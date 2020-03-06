@@ -1,9 +1,7 @@
 import React, { FunctionComponent, useMemo } from 'react';
 import styled from 'styled-components/macro';
-
-import { useGet } from 'restful-react';
 import { xml2js } from 'xml-js';
-
+import { useTextFetch } from '../../common/hooks'
 import { LibraryRssPodcast }  from '../../common/web-api';
 
 const Container = styled.div``;
@@ -20,7 +18,7 @@ const PodcastCard: FunctionComponent<{
 }> = ({
   podcast
 }) => {
-  const { data: rss, loading } = useGet(podcast.url!, { requestOptions: {} });
+  const { text: rss, isLoading } = useTextFetch(podcast.url!, { });
 
   const info = useMemo(() => {
     if (rss == null) {
@@ -51,7 +49,7 @@ const PodcastCard: FunctionComponent<{
 
   return (
     <Container>
-      {loading && '?'}
+      {isLoading && '?'}
       {info && (
         <a href={info.url} target="_blank" rel="noopener noreferrer">
           <Img src={info.imageUrl} alt={info.title} title={info.title} />
