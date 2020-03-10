@@ -31,7 +31,7 @@ namespace Uncast.WebApi.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPost(string? returnUrl = null)
         {
-            await _signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync().ConfigureAwait(false);
             _logger.LogInformation("User logged out.");
             return Redirect(returnUrl); // TODO: Validate that the return URL points to this server or the webapp
         }

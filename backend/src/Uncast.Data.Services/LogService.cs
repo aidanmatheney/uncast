@@ -66,7 +66,7 @@ SELECT
                 table.Column("EventName", "varchar(64) NULL", entry => entry.EventName);
                 table.Column("Message", "longtext NOT NULL", entry => entry.Message);
                 table.Column("Exception", "longtext NULL", entry => entry.Exception);
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
 
             await ExecuteAsync
             (

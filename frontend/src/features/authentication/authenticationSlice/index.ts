@@ -15,8 +15,8 @@ const sliceName = 'authentication';
 
 interface AuthenticationSliceState {
   user: User | null; // TODO: Only store a serializable subset of the User object created by oidc-client's UserManager
-  signInError: SignInError | null;
-  signOutError: SignOutError | null;
+  signInError: SignInError | Error | null;
+  signOutError: SignOutError | Error | null;
 }
 
 const initialState: AuthenticationSliceState = {
@@ -68,9 +68,8 @@ export const completeSignIn = createAsyncThunk(`${sliceName}/completeSignIn`, as
     throw err;
   }
 
-  const state: SignInOutData | null = user?.state ?? null;
+  const state: SignInOutData | null = user.state ?? null;
   dispatch(replacePath(state?.returnUrl ?? '/'));
-
   return user;
 });
 

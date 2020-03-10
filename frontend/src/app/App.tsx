@@ -15,6 +15,7 @@ import Profile from '../features/profile';
 import NavBar from '../features/navbar';
 import TabId from '../common/TabId';
 import { RootState } from './createRootReducer';
+import AdminDashboard from '../features/admin/AdminDashboard';
 
 const Container = styled.div`
   height: 100vh;
@@ -28,7 +29,7 @@ const ActivityPane = styled.div`
 
 const NavBarPane = styled.div``;
 
-const store = createStore();
+export const store = createStore();
 
 const App: FunctionComponent = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,8 @@ const App: FunctionComponent = () => {
           <Route exact path="/" component={Library} />
           <Route exact path="/catalog" component={Catalog} />
           <Route exact path="/profile" component={Profile} />
+
+          <Route path="/admin" component={AdminDashboard} />
 
           <Route render={props => {
             return (

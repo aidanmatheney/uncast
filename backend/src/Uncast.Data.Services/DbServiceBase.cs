@@ -140,13 +140,7 @@
         #region Bulk copy
 
         protected Task<DbTempTableHandle> TempTableAsync<TRow>(IEnumerable<TRow> rows, Action<DbTempTableBuilder<TRow>> configureTable, CancellationToken cancellationToken)
-        {
-            ThrowIf.Null(configureTable, nameof(configureTable));
-
-            var builder = new DbTempTableBuilder<TRow>();
-            configureTable(builder);
-            return TempTableAsync(rows, builder, cancellationToken);
-        }
+            => TempTableAsync(rows, new DbTempTableBuilder<TRow>(configureTable), cancellationToken);
 
         /// <summary>
         /// Load rows into a temporary table in the database. The name of the table is automatically generated and can be accessed through <see cref="DbTempTableHandle.Name" />.

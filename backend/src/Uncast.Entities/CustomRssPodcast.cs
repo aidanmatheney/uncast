@@ -1,6 +1,6 @@
 ﻿namespace Uncast.Entities
 {
-    public class LibraryRssPodcast : LibraryPodcastBase
+    public class CustomRssPodcast : CustomPodcastBase
     {
         public string? FeedUrl { get; set; }
     }

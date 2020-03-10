@@ -11,6 +11,14 @@
     {
         private readonly List<DbTempTableColumn<TRow>> _columns = new List<DbTempTableColumn<TRow>>();
 
+        public DbTempTableBuilder() { }
+
+        public DbTempTableBuilder(Action<DbTempTableBuilder<TRow>> configure)
+        {
+            ThrowIf.Null(configure, nameof(configure));
+            configure(this);
+        }
+
         public IReadOnlyList<DbTempTableColumn<TRow>> Columns => _columns;
 
         public void Column<TValue>(string name, string dbType, Func<TRow, TValue> getValue)

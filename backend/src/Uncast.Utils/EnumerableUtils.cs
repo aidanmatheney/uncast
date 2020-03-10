@@ -2,8 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
-    public static class EnumerableExtensions
+    public static class EnumerableUtils
     {
         public static IEnumerable<(T Element, int Index)> Index<T>(this IEnumerable<T> source)
         {
@@ -44,26 +45,32 @@
 
             IEnumerable<T> GetBatch()
             {
-                // ReSharper disable once AccessToDisposedClosure
+                // ReSharper disable AccessToDisposedClosure
                 yield return enumerator.Current;
 
                 for (int i = 1; i < size; i += 1)
                 {
-                    // ReSharper disable once AccessToDisposedClosure
                     hasCurrent = enumerator.MoveNext();
                     if (!hasCurrent)
                         yield break;
 
-                    // ReSharper disable once AccessToDisposedClosure
                     yield return enumerator.Current;
                 }
 
-                // ReSharper disable once AccessToDisposedClosure
                 hasCurrent = enumerator.MoveNext();
+                // ReSharper restore AccessToDisposedClosure
             }
 
             while (hasCurrent)
                 yield return GetBatch();
+        }
+
+        public static IEnumerable<T> ConcatMany<T>(this IEnumerable<T> first, params IEnumerable<T>[] others)
+        {
+            ThrowIf.Null(first, nameof(first));
+            ThrowIf.Null(others, nameof(others));
+
+            return others.Aggregate(first, (concatenated, current) => concatenated.Concat(current));
         }
     }
 }

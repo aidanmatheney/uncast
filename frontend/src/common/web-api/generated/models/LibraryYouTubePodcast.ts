@@ -16,58 +16,58 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface LibraryRssPodcast
+ * @interface LibraryYouTubePodcast
  */
-export interface LibraryRssPodcast {
+export interface LibraryYouTubePodcast {
     /**
      * 
      * @type {string}
-     * @memberof LibraryRssPodcast
+     * @memberof LibraryYouTubePodcast
      */
-    feedUrl?: string | null;
+    channelId?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof LibraryRssPodcast
+     * @memberof LibraryYouTubePodcast
      */
     id?: string;
     /**
      * 
      * @type {string}
-     * @memberof LibraryRssPodcast
+     * @memberof LibraryYouTubePodcast
      */
     name?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof LibraryRssPodcast
+     * @memberof LibraryYouTubePodcast
      */
     author?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof LibraryRssPodcast
+     * @memberof LibraryYouTubePodcast
      */
     description?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof LibraryRssPodcast
+     * @memberof LibraryYouTubePodcast
      */
     thumbnailFileId?: string | null;
 }
 
-export function LibraryRssPodcastFromJSON(json: any): LibraryRssPodcast {
-    return LibraryRssPodcastFromJSONTyped(json, false);
+export function LibraryYouTubePodcastFromJSON(json: any): LibraryYouTubePodcast {
+    return LibraryYouTubePodcastFromJSONTyped(json, false);
 }
 
-export function LibraryRssPodcastFromJSONTyped(json: any, ignoreDiscriminator: boolean): LibraryRssPodcast {
+export function LibraryYouTubePodcastFromJSONTyped(json: any, ignoreDiscriminator: boolean): LibraryYouTubePodcast {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'feedUrl': !exists(json, 'feedUrl') ? undefined : json['feedUrl'],
+        'channelId': !exists(json, 'channelId') ? undefined : json['channelId'],
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'author': !exists(json, 'author') ? undefined : json['author'],
@@ -76,7 +76,7 @@ export function LibraryRssPodcastFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function LibraryRssPodcastToJSON(value?: LibraryRssPodcast | null): any {
+export function LibraryYouTubePodcastToJSON(value?: LibraryYouTubePodcast | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -85,7 +85,7 @@ export function LibraryRssPodcastToJSON(value?: LibraryRssPodcast | null): any {
     }
     return {
         
-        'feedUrl': value.feedUrl,
+        'channelId': value.channelId,
         'id': value.id,
         'name': value.name,
         'author': value.author,

@@ -18,7 +18,7 @@ const PodcastCard: FunctionComponent<{
 }> = ({
   podcast
 }) => {
-  const { text: rss, isLoading } = useTextFetch(podcast.url!, { });
+  const { text: rss, isLoading } = useTextFetch(podcast.feedUrl!, { });
 
   const info = useMemo(() => {
     if (rss == null) {

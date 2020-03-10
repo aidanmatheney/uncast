@@ -1,2 +1,2 @@
-export * from './LibraryRssPodcastApi';
 export * from './OidcConfigurationApi';
+export * from './PodcastsApi';

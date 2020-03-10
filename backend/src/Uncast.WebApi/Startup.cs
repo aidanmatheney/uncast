@@ -110,10 +110,7 @@ namespace Uncast.WebApi
             {
                 options.AddPolicy(DevelopmentCorsPolicyName, policy =>
                 {
-                    policy.WithOrigins
-                    (
-                        "http://localhost:3000" // Web app
-                    );
+                    policy.WithOrigins("http://localhost:3000"); // Web app
                     policy.WithHeaders(HeaderNames.Authorization);
                 });
             });
@@ -165,7 +162,10 @@ namespace Uncast.WebApi
             services.AddScoped<IAppPersistedGrantService, AppPersistedGrantService>();
             services.AddScoped<IAppDeviceFlowService, AppDeviceFlowService>();
 
+            services.AddScoped<IFileService, FileService>();
+
             services.AddScoped<IPodcastService, PodcastService>();
+            services.AddScoped<IPodcastEpisodeService, PodcastEpisodeService>();
             services.AddScoped<ILogService, LogService>();
 
             services.AddScoped<IEmailSender, ToLogEmailSender>();

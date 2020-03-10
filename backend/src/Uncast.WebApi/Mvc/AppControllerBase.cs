@@ -42,7 +42,24 @@
 
         protected string? UserId => _userId.Value;
         protected bool UserIsAuthenticated => !(UserId is null);
+
+        /// <summary>
+        /// Gets the current user, or <see langword="null"/> if they are not authenticated.
+        /// </summary>
         protected Task<AppUser?> GetAppUserAsync() => _appUser.Value;
+
+        /// <summary>
+        /// Gets the current user when the application logic should have ensured that they are authenticated.
+        /// An example of this situation is when the Authorize attribute is placed on the controller.
+        /// </summary>
+        protected async Task<AppUser> GetAuthenticatedAppUserAsync()
+        {
+            var user = await GetAppUserAsync().ConfigureAwait(false);
+            if (user is null)
+                throw new InvalidOperationException("The user is not authenticated");
+
+            return user;
+        }
 
         private string? LoadUserId()
         {
