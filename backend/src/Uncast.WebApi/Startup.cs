@@ -162,10 +162,11 @@ namespace Uncast.WebApi
             services.AddScoped<IAppPersistedGrantService, AppPersistedGrantService>();
             services.AddScoped<IAppDeviceFlowService, AppDeviceFlowService>();
 
-            services.AddScoped<IFileService, FileService>();
-
             services.AddScoped<IPodcastService, PodcastService>();
             services.AddScoped<IPodcastEpisodeService, PodcastEpisodeService>();
+            services.AddScoped<IUserStateService, UserStateService>();
+
+            services.AddScoped<IFileService, FileService>();
             services.AddScoped<ILogService, LogService>();
 
             services.AddScoped<IEmailSender, ToLogEmailSender>();
