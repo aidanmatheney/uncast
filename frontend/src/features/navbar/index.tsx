@@ -10,9 +10,11 @@ import {
 } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib'
 
-const Container = styled.div`
-  background: #35369A;
+import '../../index.css';
 
+
+const Container = styled.div`
+  background: #473c84;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 `;
@@ -21,7 +23,9 @@ const Container = styled.div`
 const Button = styled.button<{ isActive: boolean }>`
   text-align: center;
   margin: 0.25rem;
-  cursor: pointer;
+  cursor: pointer;  
+  color: rgba(F, F, F, 0);
+  background #a79bda;
 
   ${({ isActive }) => isActive && css`font-size: 2em;`}
 `;
@@ -34,6 +38,7 @@ const TabDescriptions: {
   tab: TabId;
   name: string;
   Icon: IconType;
+
 }[] = [
   {
     tab: TabId.Library,
