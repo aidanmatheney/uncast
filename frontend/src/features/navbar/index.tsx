@@ -24,9 +24,9 @@ const Button = styled.button<{ isActive: boolean }>`
   text-align: center;
   margin: 0.25rem;
   cursor: pointer;  
+  background: #8c7ce2;
   color: rgba(F, F, F, 0);
-  background #a79bda;
-
+  
   ${({ isActive }) => isActive && css`font-size: 2em;`}
 `;
 

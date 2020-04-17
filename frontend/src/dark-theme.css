@@ -74,6 +74,12 @@ p {
   margin-top: 0;
   margin-bottom: 1em;
 }
+
+.Button {
+  background: #473c84;
+  color: rgba(F, F, F, 0);
+}
+
 abbr[title],
 abbr[data-original-title] {
   text-decoration: underline;

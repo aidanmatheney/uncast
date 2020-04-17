@@ -14,6 +14,7 @@ import Catalog from '../features/catalog';
 import Profile from '../features/profile';
 import NavBar from '../features/navbar';
 import TabId from '../common/TabId';
+import AddStreamMenu from '../features/addstream';
 import { RootState } from './createRootReducer';
 import AdminDashboard from '../features/admin/AdminDashboard';
 
@@ -66,6 +67,7 @@ const App: FunctionComponent = () => {
 
       <NavBarPane>
         <AuthenticationMenu />
+        <AddStreamMenu />
         <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
       </NavBarPane>
     </Container>

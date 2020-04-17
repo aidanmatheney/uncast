@@ -1,7 +1,7 @@
 enum TabId {
   Library,
   Catalog,
-  Profile
+  Profile,
 };
 
 export default TabId;
