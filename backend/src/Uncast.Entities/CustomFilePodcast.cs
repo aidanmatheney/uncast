@@ -1,4 +1,9 @@
 ﻿namespace Uncast.Entities
 {
-    public class CustomFilePodcast : CustomPodcastBase { }
+    using System;
+    public class CustomFilePodcast : CustomPodcastBase {
+
+        public Guid? UserId { get; set; }
+
+    }
 }

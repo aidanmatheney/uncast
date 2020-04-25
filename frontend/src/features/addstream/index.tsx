@@ -1,5 +1,6 @@
 import React, { Component, FunctionComponent } from 'react';
 import styled, { css } from 'styled-components';
+import axios from 'axios';
 
 import UserTabId from '../../common/UserTabId';
 import AddStreamTabId from '../../common/AddStreamTabId';
@@ -97,23 +98,43 @@ const TabDescriptions: {
 
 //-----------------------------------------------------------------------------------------
 //for getting file input
-class FileForm extends React.Component <{}, { value: string }> {
+class FileForm extends React.Component <{}, { value: string; selectedFile: any; loaded: any}> {
   constructor(props: any) {
     super(props);
     this.state = {
-      value: ''
+      value: '',
+      selectedFile: null,
+      loaded: 0,
     };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  
   handleChange(event: any) {
-    this.setState({value: event.target.value});
+    this.setState({
+      value: event.target.value,
+      selectedFile: event.target.files[0],
+      loaded: 0,
+    });
+    console.log(event.target.files[0]);
   }
+
   handleSubmit(event: any) {
     //Add file
     alert('A name was submitted: ' + this.state.value);
+    const data = new FormData()
+    data.append('file',this.state.selectedFile)
+    axios.post("http://localhost:8000/upload", data, {
+
+    })
+    .then(res => {
+      console.log(res.statusText)
+    })
+
     event.preventDefault();
   }
+
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
@@ -142,6 +163,7 @@ class RSSForm extends React.Component <{}, { value: string }> {
 
   handleChange(event: any) {
     this.setState({value: event.target.value});
+    
   }
 
   handleSubmit(event: any) {
@@ -210,11 +232,11 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
     this._onButtonClick = this._onButtonClick.bind(this);
   }
   _onButtonClick() {
-    if(this.state.showComponent == false) {
+    if(this.state.showComponent === false) {
       this.setState ({
         showComponent: true,
       });
-    } else if (this.state.showComponent == true) {
+    } else if (this.state.showComponent === true) {
       this.setState ({
         showComponent: false,
       });
@@ -260,11 +282,11 @@ class FileMenu extends React.Component<{}, { showComponent: boolean }> {
     this._onButtonClick = this._onButtonClick.bind(this);
   }
   _onButtonClick() {
-    if(this.state.showComponent == false) {
+    if(this.state.showComponent === false) {
       this.setState ({
         showComponent: true,
       });
-    } else if (this.state.showComponent == true) {
+    } else if (this.state.showComponent === true) {
       this.setState ({
         showComponent: false,
       });
@@ -301,11 +323,11 @@ class RSSMenu extends React.Component<{}, { showComponent: boolean }> {
     this._onButtonClick = this._onButtonClick.bind(this);
   }
   _onButtonClick() {
-    if(this.state.showComponent == false) {
+    if(this.state.showComponent === false) {
       this.setState ({
         showComponent: true,
       });
-    } else if (this.state.showComponent == true) {
+    } else if (this.state.showComponent === true) {
       this.setState ({
         showComponent: false,
       });
@@ -342,11 +364,11 @@ class YTMenu extends React.Component<{}, { showComponent: boolean }> {
     this._onButtonClick = this._onButtonClick.bind(this);
   }
   _onButtonClick() {
-    if(this.state.showComponent == false) {
+    if(this.state.showComponent === false) {
       this.setState ({
         showComponent: true,
       });
-    } else if (this.state.showComponent == true) {
+    } else if (this.state.showComponent === true) {
       this.setState ({
         showComponent: false,
       });
