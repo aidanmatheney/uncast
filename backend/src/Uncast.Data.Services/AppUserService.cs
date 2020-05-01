@@ -1,6 +1,5 @@
 ﻿namespace Uncast.Data.Services
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -292,7 +291,7 @@ SELECT
             {
                 table.Column("ClaimType", "varchar(256) NOT NULL", claim => claim.ClaimType);
                 table.Column("ClaimValue", "nvarchar(2048) NOT NULL", claim => claim.ClaimValue);
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
 
             await ExecuteAsync
             (
@@ -359,7 +358,7 @@ INSERT INTO {DbTable.UserClaim}(
             await using var claimsTable = await TempTableAsync(claims, table =>
             {
                 table.Column("ClaimType", "varchar(256) NOT NULL", claim => claim.ClaimType);
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
 
             await ExecuteAsync
             (
@@ -720,7 +719,7 @@ SELECT
             await using var codesTable = await TempTableAsync(codes, table =>
             {
                 table.Column("RecoveryCode", "varchar(256) NOT NULL", code => code);
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
 
             await ExecuteAsync
             (

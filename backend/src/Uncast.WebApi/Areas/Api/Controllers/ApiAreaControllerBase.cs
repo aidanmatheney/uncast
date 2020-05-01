@@ -10,8 +10,8 @@
     [ApiController]
     [Area("Api")]
     [Route("/[area]/[controller]")]
-    public abstract class ApiControllerBase : AppControllerBase
+    public abstract class ApiAreaControllerBase : AppControllerBase
     {
-        protected ApiControllerBase(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, ILogger logger) : base(userManager, roleManager, logger) { }
+        protected ApiAreaControllerBase(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager, ILogger logger) : base(userManager, roleManager, logger) { }
     }
 }

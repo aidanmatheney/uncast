@@ -6,3 +6,7 @@ export * from './LibraryPodcastBase';
 export * from './LibraryRssPodcast';
 export * from './LibraryYouTubePodcast';
 export * from './PodcastBase';
+export * from './UserAppState';
+export * from './UserPodcastEpisodeState';
+export * from './UserPodcastPlaybackQueue';
+export * from './UserPodcastState';

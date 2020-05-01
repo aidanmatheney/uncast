@@ -41,7 +41,7 @@
                 bool disposeWasRequested;
                 try
                 {
-                    await Task.Delay(Interval, _disposeCts.Token);
+                    await Task.Delay(Interval, _disposeCts.Token).ConfigureAwait(false);
                     disposeWasRequested = false;
                 }
                 catch (OperationCanceledException)

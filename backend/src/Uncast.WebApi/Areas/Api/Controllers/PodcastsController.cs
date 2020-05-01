@@ -16,7 +16,7 @@
     using System;
 
     [Authorize]
-    public sealed class PodcastsController : ApiControllerBase
+    public sealed class PodcastsController : ApiAreaControllerBase
     {
         private readonly IPodcastService _podcastService;
 
