@@ -1,5 +1,5 @@
 import React, { Component, FunctionComponent } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, ThemeProvider } from 'styled-components';
 import axios from 'axios';
 
 import UserTabId from '../../common/UserTabId';
@@ -13,35 +13,42 @@ import {
 } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib'
 import '../../index.css';
-
-const Container = styled.div`
-  background: #473c84;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-`;
-
-const Button = styled.button`
-  text-align: center;
-  margin: 0.25rem;
-  cursor: pointer;  
-  background: #8c7ce2;
-  color: rgba(F, F, F, 0);
-`;
+import { EventEmitter } from 'events';
 
 const MenuContainer = styled.div`
-  background: transparent;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  background: ${props => props.theme.background};
 `;
 
 const MenuButton = styled.button`
   text-align: center;
   margin: 0.25rem;
   cursor: pointer;  
-  background: #8c7ce2;
-  color: rgba(F, F, F, 0);
-  font-size: 2em;
+  color: ${props => props.theme.color};
+  font-size: 1em;
+  width: 525px;
+  background: ${props => props.theme.background};
 `; 
+
+//styled-components themes
+const ThemeStandard = {
+  background: "#8c7ce2",
+  color: "#ffffff",
+  input: "000000"
+};
+const ThemeStandardBG = {
+  background: "#3b1570"
+};
+const ThemeLight = {
+  background: "#ecccff",
+  color: "#000000"
+};
+const ThemeLightBG = {
+  background: "#b8abc9"
+};
+
 
 const FileTab: {
   tab: AddStreamTabId;
@@ -122,21 +129,21 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
 
   handleSubmit(event: any) {
     //Add file
-    alert('A name was submitted: ' + this.state.value);
     const data = new FormData()
     data.append('file',this.state.selectedFile)
-    axios.post("http://localhost:8000/upload", data, {
-
+    axios.post("http://localhost:3306/upload", data, {
     })
     .then(res => {
       console.log(res.statusText)
     })
+    
 
     event.preventDefault();
   }
 
   render() {
     return (
+      <ThemeProvider theme={ThemeStandard}>
       <form onSubmit={this.handleSubmit}>
         <label>
           Audio File:
@@ -144,6 +151,7 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
         </label>
         <input type="submit" value="Submit" />
       </form>
+      </ThemeProvider>
     );
   }
 }
@@ -152,34 +160,56 @@ export { FileForm };
 
 //-----------------------------------------------------------------------------------------
 //for getting RSS input
-class RSSForm extends React.Component <{}, { value: string }> {
+class RSSForm extends React.Component <{}, { value: string; selectedRSS: any;}> {
   constructor(props: any) {
     super(props);
-    this.state = {value: ''};
-
+    this.state = {
+      value: '',
+      selectedRSS: '',
+  };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event: any) {
-    this.setState({value: event.target.value});
+    this.setState({
+      value: event.target.value,
+      selectedRSS: event.target.value,
+    });
     
   }
 
   handleSubmit(event: any) {
     alert('A name was submitted: ' + this.state.value);
+    const data = {selectedRSS: this.state.selectedRSS}
+
+    fetch('http://localhost:3306/customrsspodcast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => {
+      console.log(res.statusText)
+    })
+
+
+    
     event.preventDefault();
   }
 
   render() {
     return (
+      <ThemeProvider theme={ThemeStandard}>
       <form onSubmit={this.handleSubmit}>
         <label>
           RSS Feed Link: 
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
+          <input id="selectedRSS" type="text" value={this.state.value} onChange={this.handleChange} />
         </label>
         <input type="submit" value="Submit" />
       </form>
+      </ThemeProvider>
     );
   }
 }
@@ -209,6 +239,7 @@ class YTForm extends React.Component <{}, { value: string }> {
 
   render() {
     return (
+      <ThemeProvider theme={ThemeStandard}>
       <form onSubmit={this.handleSubmit}>
         <label>
           YouTube Channel Link: 
@@ -216,6 +247,7 @@ class YTForm extends React.Component <{}, { value: string }> {
         </label>
         <input type="submit" value="Submit" />
       </form>
+      </ThemeProvider>
     );
   }
 }
@@ -245,14 +277,17 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
     
   render() {
     return (
-      <Container>
+      <ThemeProvider theme={ThemeStandardBG}>
+      <MenuContainer>
         {TabDescriptions.map(({ tab, name, Icon }) => {
           return (
             <div>
-              <Button key={tab} onClick={this._onButtonClick}>
+            <ThemeProvider theme={ThemeStandard}>
+              <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
-              </Button>
+              </MenuButton>
+            </ThemeProvider>
               {this.state.showComponent ?
                 <FileMenu /> :
                 null
@@ -265,10 +300,12 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
                 <YTMenu /> :
                 null
               }
+         
             </div>
           );
         })}
-      </Container>
+      </MenuContainer>
+      </ThemeProvider>
     );
   }
 };
@@ -298,6 +335,7 @@ class FileMenu extends React.Component<{}, { showComponent: boolean }> {
         {FileTab.map(({ tab, name, Icon }) => {
           return (
             <div>
+            <ThemeProvider theme={ThemeStandard}>
               <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
@@ -306,6 +344,7 @@ class FileMenu extends React.Component<{}, { showComponent: boolean }> {
                 <FileForm /> :
                 null
               }
+            </ThemeProvider>
             </div>
           );
         })}
@@ -339,6 +378,7 @@ class RSSMenu extends React.Component<{}, { showComponent: boolean }> {
         {RSSTab.map(({ tab, name, Icon }) => {
           return (
             <div>
+            <ThemeProvider theme={ThemeStandard}>
               <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
@@ -347,6 +387,7 @@ class RSSMenu extends React.Component<{}, { showComponent: boolean }> {
                 <RSSForm /> :
                 null
               }
+            </ThemeProvider>
             </div>
           );
         })}
@@ -380,6 +421,7 @@ class YTMenu extends React.Component<{}, { showComponent: boolean }> {
         {YouTubeTab.map(({ tab, name, Icon }) => {
           return (
             <div>
+              <ThemeProvider theme={ThemeStandard}>
               <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
@@ -388,6 +430,7 @@ class YTMenu extends React.Component<{}, { showComponent: boolean }> {
                 <YTForm /> :
                 null
               }
+            </ThemeProvider>
             </div>
           );
         })}

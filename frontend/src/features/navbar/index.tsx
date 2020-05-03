@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, ThemeProvider } from 'styled-components';
 
 import TabId from '../../common/TabId';
 
@@ -14,7 +14,7 @@ import '../../index.css';
 
 
 const Container = styled.div`
-  background: #473c84;
+  background: ${props => props.theme.background};
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 `;
@@ -24,11 +24,27 @@ const Button = styled.button<{ isActive: boolean }>`
   text-align: center;
   margin: 0.25rem;
   cursor: pointer;  
-  background: #8c7ce2;
-  color: rgba(F, F, F, 0);
+  background: ${props => props.theme.background};
+  color: ${props => props.theme.color};
   
   ${({ isActive }) => isActive && css`font-size: 2em;`}
 `;
+
+//styled-components themes
+const ThemeStandard = {
+  background: "#8c7ce2",
+  color: "#ffffff"
+};
+const ThemeStandardBG = {
+  background: "#3b1570"
+};
+const ThemeLight = {
+  background: "#ecccff",
+  color: "#000000"
+};
+const ThemeLightBG = {
+  background: "#b8abc9"
+};
 
 const IconContainer = styled.div``;
 const TextContainer = styled.div``;
@@ -66,18 +82,22 @@ const NavBar: FunctionComponent<{
 }) => {
 
   return (
+    <ThemeProvider theme={ThemeStandardBG}>
     <Container>
       {TabDescriptions.map(({ tab, name, Icon }) => {
         const isActive = activeTab === tab;
 
         return (
+          <ThemeProvider theme={ThemeStandard}>
           <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
             <IconContainer><Icon /></IconContainer>
             <TextContainer>{name}</TextContainer>
           </Button>
+          </ThemeProvider>
         );
       })}
     </Container>
+    </ThemeProvider>
   );
 };
 
