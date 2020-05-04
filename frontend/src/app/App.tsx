@@ -1,8 +1,10 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
-import styled from 'styled-components/macro';
+import styled, { css, ThemeProvider } from 'styled-components';
 
 import createStore, { history } from './createStore';
 import { loadUser } from '../features/authentication/authenticationSlice';
@@ -28,6 +30,14 @@ const ActivityPane = styled.div`
   flex-grow: 1;
 `;
 
+//react-h5-player
+const Player = () => (
+  <AudioPlayer
+    src="http://ia802900.us.archive.org/19/items/bump220/bump220_01-in_vitro-chico_mendes.mp3"  //just an example for testing, replace with any audio
+    onPlay={e => console.log("onPlay")}
+  />
+);
+
 const NavBarPane = styled.div``;
 
 export const store = createStore();
@@ -46,6 +56,7 @@ const App: FunctionComponent = () => {
 
   return (
     <Container>
+      <Player />
       <ActivityPane>
         {user && (<Switch>
           <Route exact path="/" component={Library} />

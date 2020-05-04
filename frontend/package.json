@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/runtime": "^7.9.6",
+    "@iconify/react": "^1.1.3",
     "@reduxjs/toolkit": "^1.3.0-alpha.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
@@ -10,6 +12,7 @@
     "@types/jest": "^24.0.25",
     "@types/node": "^12.12.24",
     "@types/react": "^16.9.17",
+    "@types/react-audio-player": "^0.11.0",
     "@types/react-dom": "^16.9.4",
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.3",
@@ -31,6 +34,7 @@
     "react-async": "^10.0.0",
     "react-audio-player": "^0.13.0",
     "react-dom": "^16.12.0",
+    "react-h5-audio-player": "^3.0.6",
     "react-icons": "^3.8.0",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
@@ -60,5 +64,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@iconify/icons-mdi": "^1.0.100"
   }
 }
