@@ -33,7 +33,7 @@ const ActivityPane = styled.div`
 //react-h5-player
 const Player = () => (
   <AudioPlayer
-    src="http://ia802900.us.archive.org/19/items/bump220/bump220_01-in_vitro-chico_mendes.mp3"  //just an example for testing, replace with any audio
+    src="https://play.podtrac.com/npr-510306/edge1.pod.npr.org/anon.npr-mp3/npr/asc/2017/10/20171024_asc_japanesebreakfastpodcast.mp3"  //just an example for testing, replace with any audio
     onPlay={e => console.log("onPlay")}
   />
 );
