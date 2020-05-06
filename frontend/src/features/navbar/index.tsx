@@ -11,7 +11,6 @@ import {
 import { IconType } from 'react-icons/lib'
 
 import '../../index.css';
-import ThemeStandardChildren from "../theme/Theme";
 
 const Container = styled.div`
   background: ${props => props.theme.background};
@@ -29,18 +28,6 @@ const Button = styled.button<{ isActive: boolean }>`
   
   ${({ isActive }) => isActive && css`font-size: 2em;`}
 `;
-
-//styled-components themes
-const ThemeStandardBG = {
-  background: "#3b1570"
-};
-const ThemeLight = {
-  background: "#ecccff",
-  color: "#000000"
-};
-const ThemeLightBG = {
-  background: "#b8abc9"
-};
 
 const IconContainer = styled.div``;
 const TextContainer = styled.div``;
@@ -83,12 +70,10 @@ const NavBar: FunctionComponent<{
         const isActive = activeTab === tab;
 
         return (
-          <ThemeStandardChildren>
           <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
             <IconContainer><Icon /></IconContainer>
             <TextContainer>{name}</TextContainer>
           </Button>
-          </ThemeStandardChildren>
         );
       })}
     </Container>

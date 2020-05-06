@@ -20,16 +20,18 @@ import AddStreamMenu from '../features/addstream';
 import { RootState } from './createRootReducer';
 import AdminDashboard from '../features/admin/AdminDashboard';
 
-import ThemeStandardChildren from "../features/theme/Theme";
+import ThemeStandardChildren, { ThemeLightChildren } from "../features/theme/Theme";
 
 const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background: ${props => props.theme.colors};
 `;
 
 const ActivityPane = styled.div`
   flex-grow: 1;
+  
 `;
 
 //react-h5-player
@@ -58,7 +60,6 @@ const App: FunctionComponent = () => {
 
   return (
     <Container>
-      
       <ActivityPane>
         {user && (<Switch>
           <Route exact path="/" component={Library} />
@@ -79,12 +80,12 @@ const App: FunctionComponent = () => {
       </ActivityPane>
 
       <NavBarPane>
-        <ThemeStandardChildren>
+        <ThemeStandardChildren> 
           <Player />
+          <AuthenticationMenu />
+          <AddStreamMenu />
+          <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
         </ThemeStandardChildren>
-        <AuthenticationMenu />
-        <AddStreamMenu />
-        <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
       </NavBarPane>
     </Container>
   );
