@@ -14,6 +14,8 @@ import {
 import { IconType } from 'react-icons/lib'
 import '../../index.css';
 import { EventEmitter } from 'events';
+import ThemeStandardChildren from "../theme/Theme";
+
 
 const MenuContainer = styled.div`
   display: grid;
@@ -33,11 +35,6 @@ const MenuButton = styled.button`
 `; 
 
 //styled-components themes
-const ThemeStandard = {
-  background: "#8c7ce2",
-  color: "#ffffff",
-  input: "000000"
-};
 const ThemeStandardBG = {
   background: "#3b1570"
 };
@@ -143,7 +140,7 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
 
   render() {
     return (
-      <ThemeProvider theme={ThemeStandard}>
+      <ThemeStandardChildren>
       <form onSubmit={this.handleSubmit}>
         <label>
           Audio File:
@@ -151,7 +148,7 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
         </label>
         <input type="submit" value="Submit" />
       </form>
-      </ThemeProvider>
+      </ThemeStandardChildren>
     );
   }
 }
@@ -201,7 +198,7 @@ class RSSForm extends React.Component <{}, { value: string; selectedRSS: any;}> 
 
   render() {
     return (
-      <ThemeProvider theme={ThemeStandard}>
+      <ThemeStandardChildren>
       <form onSubmit={this.handleSubmit}>
         <label>
           RSS Feed Link: 
@@ -209,7 +206,7 @@ class RSSForm extends React.Component <{}, { value: string; selectedRSS: any;}> 
         </label>
         <input type="submit" value="Submit" />
       </form>
-      </ThemeProvider>
+      </ThemeStandardChildren>
     );
   }
 }
@@ -239,7 +236,7 @@ class YTForm extends React.Component <{}, { value: string }> {
 
   render() {
     return (
-      <ThemeProvider theme={ThemeStandard}>
+      <ThemeStandardChildren>
       <form onSubmit={this.handleSubmit}>
         <label>
           YouTube Channel Link: 
@@ -247,7 +244,7 @@ class YTForm extends React.Component <{}, { value: string }> {
         </label>
         <input type="submit" value="Submit" />
       </form>
-      </ThemeProvider>
+      </ThemeStandardChildren>
     );
   }
 }
@@ -277,17 +274,16 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
     
   render() {
     return (
-      <ThemeProvider theme={ThemeStandardBG}>
       <MenuContainer>
         {TabDescriptions.map(({ tab, name, Icon }) => {
           return (
             <div>
-            <ThemeProvider theme={ThemeStandard}>
+            <ThemeStandardChildren>
               <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
               </MenuButton>
-            </ThemeProvider>
+            </ThemeStandardChildren>
               {this.state.showComponent ?
                 <FileMenu /> :
                 null
@@ -305,7 +301,6 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
           );
         })}
       </MenuContainer>
-      </ThemeProvider>
     );
   }
 };
@@ -335,7 +330,7 @@ class FileMenu extends React.Component<{}, { showComponent: boolean }> {
         {FileTab.map(({ tab, name, Icon }) => {
           return (
             <div>
-            <ThemeProvider theme={ThemeStandard}>
+            <ThemeStandardChildren>
               <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
@@ -344,7 +339,7 @@ class FileMenu extends React.Component<{}, { showComponent: boolean }> {
                 <FileForm /> :
                 null
               }
-            </ThemeProvider>
+            </ThemeStandardChildren>
             </div>
           );
         })}
@@ -378,7 +373,7 @@ class RSSMenu extends React.Component<{}, { showComponent: boolean }> {
         {RSSTab.map(({ tab, name, Icon }) => {
           return (
             <div>
-            <ThemeProvider theme={ThemeStandard}>
+            <ThemeStandardChildren>
               <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
@@ -387,7 +382,7 @@ class RSSMenu extends React.Component<{}, { showComponent: boolean }> {
                 <RSSForm /> :
                 null
               }
-            </ThemeProvider>
+            </ThemeStandardChildren>
             </div>
           );
         })}
@@ -421,7 +416,7 @@ class YTMenu extends React.Component<{}, { showComponent: boolean }> {
         {YouTubeTab.map(({ tab, name, Icon }) => {
           return (
             <div>
-              <ThemeProvider theme={ThemeStandard}>
+              <ThemeStandardChildren>
               <MenuButton key={tab} onClick={this._onButtonClick}>
                 <IconContainer><Icon /></IconContainer>
                 <TextContainer>{name}</TextContainer>
@@ -430,7 +425,7 @@ class YTMenu extends React.Component<{}, { showComponent: boolean }> {
                 <YTForm /> :
                 null
               }
-            </ThemeProvider>
+            </ThemeStandardChildren>
             </div>
           );
         })}

@@ -20,6 +20,8 @@ import AddStreamMenu from '../features/addstream';
 import { RootState } from './createRootReducer';
 import AdminDashboard from '../features/admin/AdminDashboard';
 
+import ThemeStandardChildren from "../features/theme/Theme";
+
 const Container = styled.div`
   height: 100vh;
   display: flex;
@@ -56,7 +58,7 @@ const App: FunctionComponent = () => {
 
   return (
     <Container>
-      <Player />
+      
       <ActivityPane>
         {user && (<Switch>
           <Route exact path="/" component={Library} />
@@ -77,6 +79,9 @@ const App: FunctionComponent = () => {
       </ActivityPane>
 
       <NavBarPane>
+        <ThemeStandardChildren>
+          <Player />
+        </ThemeStandardChildren>
         <AuthenticationMenu />
         <AddStreamMenu />
         <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
