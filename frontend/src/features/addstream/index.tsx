@@ -12,7 +12,8 @@ import {
   FaYoutube
 } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib'
-import '../../index.css';
+//import '../../index.css';
+import './form.css';
 import { EventEmitter } from 'events';
 
 const MenuContainer = styled.div`
@@ -29,8 +30,17 @@ const MenuButton = styled.button`
   color: ${props => props.theme.color};
   font-size: 1em;
   width: 525px;
+  border: 2px solid ${props => props.theme.borderColor};
+  border-radius: 3px;
   background: ${props => props.theme.background};
 `; 
+
+const AddContainer = styled.div`
+  background: ${props => props.theme.addBackground};
+  margin: 0.25rem;
+  font-size: 1em;
+  width: 525px;
+`;
 
 const FileTab: {
   tab: AddStreamTabId;
@@ -68,10 +78,9 @@ const YouTubeTab: {
   }
 ];
 
+ 
 
-const IconContainer = styled.div`
-  background: transparent;
-`;
+const IconContainer = styled.div``;
 const TextContainer = styled.div``;
 
 const TabDescriptions: {
@@ -115,7 +124,7 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
     //Add file
     const data = new FormData()
     data.append('file',this.state.selectedFile)
-    axios.post("http://localhost:3306/upload", data, {
+    axios.post("http://localhost:8000/upload", data, {
     })
     .then(res => {
       console.log(res.statusText)
@@ -127,13 +136,15 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
 
   render() {
     return (
+      <AddContainer>
       <form onSubmit={this.handleSubmit}>
         <label>
-          Audio File:
+          Audio File: 
           <input type="file" value={this.state.value} onChange={this.handleChange} />
         </label>
         <input type="submit" value="Submit" />
       </form>
+      </AddContainer>
     );
   }
 }
@@ -183,6 +194,7 @@ class RSSForm extends React.Component <{}, { value: string; selectedRSS: any;}> 
 
   render() {
     return (
+      <AddContainer>
       <form onSubmit={this.handleSubmit}>
         <label>
           RSS Feed Link: 
@@ -190,6 +202,7 @@ class RSSForm extends React.Component <{}, { value: string; selectedRSS: any;}> 
         </label>
         <input type="submit" value="Submit" />
       </form>
+      </AddContainer>
     );
   }
 }
@@ -219,6 +232,7 @@ class YTForm extends React.Component <{}, { value: string }> {
 
   render() {
     return (
+      <AddContainer>
       <form onSubmit={this.handleSubmit}>
         <label>
           YouTube Channel Link: 
@@ -226,6 +240,7 @@ class YTForm extends React.Component <{}, { value: string }> {
         </label>
         <input type="submit" value="Submit" />
       </form>
+      </AddContainer>
     );
   }
 }

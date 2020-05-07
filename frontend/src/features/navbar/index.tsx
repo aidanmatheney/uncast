@@ -25,6 +25,8 @@ const Button = styled.button<{ isActive: boolean }>`
   cursor: pointer;  
   background: ${props => props.theme.background};
   color: ${props => props.theme.color};
+  border: 2px solid ${props => props.theme.borderColor};
+  border-radius: 3px;
   
   ${({ isActive }) => isActive && css`font-size: 2em;`}
 `;

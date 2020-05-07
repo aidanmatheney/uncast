@@ -9,6 +9,7 @@ import styled, { css, ThemeProvider } from 'styled-components';
 import createStore, { history } from './createStore';
 import { loadUser } from '../features/authentication/authenticationSlice';
 
+import AddStreamMenu from '../features/addstream';
 import AuthenticationMenu from '../features/authentication/AuthenticationMenu';
 import AuthenticationCallbacks from '../features/authentication/AuthenticationCallbacks';
 import Library from '../features/library';
@@ -16,11 +17,15 @@ import Catalog from '../features/catalog';
 import Profile from '../features/profile';
 import NavBar from '../features/navbar';
 import TabId from '../common/TabId';
-import AddStreamMenu from '../features/addstream';
 import { RootState } from './createRootReducer';
 import AdminDashboard from '../features/admin/AdminDashboard';
 
-import ThemeStandardChildren, { ThemeLightChildren } from "../features/theme/Theme";
+import ThemeStandardChildren, { ThemeLightChildren, ThemeDarkChildren } from "../features/theme/Theme";
+
+const Wrapper = styled.section`
+  padding: 3em,
+  background: ${props => props.theme.pageBgColor};
+`;
 
 const Container = styled.div`
   height: 100vh;
@@ -59,6 +64,7 @@ const App: FunctionComponent = () => {
   }, [dispatch]);
 
   return (
+    <Wrapper>
     <Container>
       <ActivityPane>
         {user && (<Switch>
@@ -80,14 +86,15 @@ const App: FunctionComponent = () => {
       </ActivityPane>
 
       <NavBarPane>
-        <ThemeStandardChildren> 
+        <ThemeLightChildren> 
           <Player />
           <AuthenticationMenu />
           <AddStreamMenu />
           <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
-        </ThemeStandardChildren>
+        </ThemeLightChildren>
       </NavBarPane>
     </Container>
+    </Wrapper>
   );
 };
 
