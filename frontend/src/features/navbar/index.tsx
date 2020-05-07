@@ -13,7 +13,7 @@ import { IconType } from 'react-icons/lib'
 import '../../index.css';
 
 const Container = styled.div`
-  background: ${props => props.theme.background};
+  background: ${props => props.theme.pageBackground};
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 `;

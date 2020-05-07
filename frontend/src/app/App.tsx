@@ -26,7 +26,7 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: ${props => props.theme.colors};
+  background: ${props => props.theme.pageBackground};
 `;
 
 const ActivityPane = styled.div`

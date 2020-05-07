@@ -15,12 +15,11 @@ import { IconType } from 'react-icons/lib'
 import '../../index.css';
 import { EventEmitter } from 'events';
 
-
 const MenuContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   width: 100%;
-  background: ${props => props.theme.background};
+  background: ${props => props.theme.pageBackground};
 `;
 
 const MenuButton = styled.button`

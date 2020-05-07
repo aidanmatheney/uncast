@@ -2,12 +2,11 @@ import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import 'react-h5-audio-player/lib/styles.css';
 
-const ThemeStandard = {
+const ThemeStandard = { //dark theme
     background: "#8c7ce2",
     color: "#ffffff",
     input: "000000",
-    //pageBackground: "#181818"
-    colors: "#ffffff"
+    pageBackground: "#443063"
   };
   
 const ThemeStandardChildren = ({ children }: any) => (
