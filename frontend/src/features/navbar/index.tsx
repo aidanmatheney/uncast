@@ -17,9 +17,6 @@ import {
   NavLink,
   HashRouter
 } from "react-router-dom";
-import Library from '../library/index';
-import Catalog from '../catalog/index';
-import Profile from '../profile/index';
 
 const Container = styled.div`
   background: ${props => props.theme.pageBackground};

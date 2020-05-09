@@ -5,7 +5,8 @@ import { LibraryRssPodcast } from '../../common/web-api';
 import PodcastCard from './PodcastCard';
 
 const Container = styled.div`
-  background: #35363A;
+  background: ${props => props.theme.pgBgColor};
+  color: ${props => props.theme.color};
   height: 100%;
 
   display: grid;

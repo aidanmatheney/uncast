@@ -35,7 +35,7 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: ${props => props.theme.pageBackground};
+  background: ${props => props.theme.pageBgColor};
 `;
 
 const ActivityPane = styled.div`
@@ -69,38 +69,38 @@ const App: FunctionComponent = () => {
 
   return (
     <Wrapper>
-    <Container>
-      <ActivityPane>
-        <HashRouter>
-        {user && (<Switch>
-          <Route exact path="/" component={Library} />
-          <Route exact path="/Library" component={Library} />
-          <Route exact path="/catalog" component={Catalog} />
-          <Route exact path="/profile" component={Profile} />
+    <ThemeStandardChildren> 
+      <Container>
+        <ActivityPane>
+          <HashRouter>
+          {user && (<Switch>
+            <Route exact path="/" component={Library} />
+            <Route exact path="/Library" component={Library} />
+            <Route exact path="/catalog" component={Catalog} />
+            <Route exact path="/profile" component={Profile} />
 
-          <Route path="/admin" component={AdminDashboard} />
+            <Route path="/admin" component={AdminDashboard} />
 
-          <Route render={props => {
-            return (
-              <div>
-                <div>Unmatched route:</div>
-                <pre>{JSON.stringify(props, null, 2)}</pre>
-              </div>
-            );
-          }} />
-        </Switch>)}
-        </HashRouter>
-      </ActivityPane>
+            <Route render={props => {
+              return (
+                <div>
+                  <div>Unmatched route:</div>
+                  <pre>{JSON.stringify(props, null, 2)}</pre>
+                </div>
+              );
+            }} />
+          </Switch>)}
+          </HashRouter>
+        </ActivityPane>
 
-      <NavBarPane>
-        <ThemeStandardChildren> 
+        <NavBarPane>
           <Player />
           <AuthenticationMenu />
           <AddStreamMenu />
           <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
-        </ThemeStandardChildren>
-      </NavBarPane>
-    </Container>
+        </NavBarPane>
+      </Container>
+    </ThemeStandardChildren>
     </Wrapper>
   );
 };
