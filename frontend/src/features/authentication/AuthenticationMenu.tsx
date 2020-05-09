@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { User } from 'oidc-client';
 import { RootState } from '../../app/createRootReducer';
 import { register, signIn, signOut } from './authenticationSlice';
-import { Button } from 'antd';
-//import "antd/dist/antd.css";
 import styled from 'styled-components';
 
 const ButtonContainer = styled.div`
   background: ${props => props.theme.pageBackground};
+  color: ${props => props.theme.color};
+  padding: 0.25rem;
 `;
 
 const Container: FunctionComponent = ({ children }) => {
