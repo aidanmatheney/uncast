@@ -10,7 +10,8 @@ const ThemeStandard = {
     pageBackground: "#443063",
     addBackground: "#b5ade0",
     borderColor: "#ffffff",
-    pageBgColor: "#181818"
+    pageBgColor: "#181818",
+    font: "Arial"
   };
 const ThemeStandardChildren = ({ children }: any) => (
   <ThemeProvider theme={ThemeStandard}>{children}</ThemeProvider>

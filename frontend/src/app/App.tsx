@@ -2,10 +2,9 @@ import React, { FunctionComponent, useState, useEffect } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, HashRouter, NavLink, Link } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
 import styled, { css, ThemeProvider } from 'styled-components';
-
 import createStore, { history } from './createStore';
 import { loadUser } from '../features/authentication/authenticationSlice';
 
@@ -19,7 +18,12 @@ import NavBar from '../features/navbar';
 import TabId from '../common/TabId';
 import { RootState } from './createRootReducer';
 import AdminDashboard from '../features/admin/AdminDashboard';
-
+import {
+  FaHome,
+  FaCloud,
+  FaUser
+} from 'react-icons/fa';
+import { IconType } from 'react-icons/lib'
 import ThemeStandardChildren, { ThemeLightChildren, ThemeDarkChildren } from "../features/theme/Theme";
 
 const Wrapper = styled.section`
@@ -67,8 +71,10 @@ const App: FunctionComponent = () => {
     <Wrapper>
     <Container>
       <ActivityPane>
+        <HashRouter>
         {user && (<Switch>
           <Route exact path="/" component={Library} />
+          <Route exact path="/Library" component={Library} />
           <Route exact path="/catalog" component={Catalog} />
           <Route exact path="/profile" component={Profile} />
 
@@ -83,15 +89,16 @@ const App: FunctionComponent = () => {
             );
           }} />
         </Switch>)}
+        </HashRouter>
       </ActivityPane>
 
       <NavBarPane>
-        <ThemeLightChildren> 
+        <ThemeStandardChildren> 
           <Player />
           <AuthenticationMenu />
           <AddStreamMenu />
           <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
-        </ThemeLightChildren>
+        </ThemeStandardChildren>
       </NavBarPane>
     </Container>
     </Wrapper>

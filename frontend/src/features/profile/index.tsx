@@ -4,7 +4,7 @@ const Profile: FunctionComponent = () => {
 
 
   return (
-    <></>
+    <h1>PROFILE TEST</h1>
   );
 };
 

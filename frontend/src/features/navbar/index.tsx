@@ -12,6 +12,15 @@ import { IconType } from 'react-icons/lib'
 
 import '../../index.css';
 
+import {
+  Route,
+  NavLink,
+  HashRouter
+} from "react-router-dom";
+import Library from '../library/index';
+import Catalog from '../catalog/index';
+import Profile from '../profile/index';
+
 const Container = styled.div`
   background: ${props => props.theme.pageBackground};
   display: grid;
@@ -19,7 +28,9 @@ const Container = styled.div`
 `;
 
 
-const Button = styled.button<{ isActive: boolean }>`
+const Button = styled.button.attrs(props => ({
+  
+}))<{ isActive: boolean}>`
   text-align: center;
   margin: 0.25rem;
   cursor: pointer;  
@@ -68,17 +79,30 @@ const NavBar: FunctionComponent<{
 
   return (
     <Container>
+          
       {TabDescriptions.map(({ tab, name, Icon }) => {
         const isActive = activeTab === tab;
 
         return (
+          <HashRouter>
           <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
-            <IconContainer><Icon /></IconContainer>
-            <TextContainer>{name}</TextContainer>
+          <NavLink 
+            activeClassName={"Button"} 
+            exact to={"/" + name}
+            activeStyle={{
+              fontSize: 32
+            }}
+            >
+              <IconContainer><Icon /></IconContainer>
+              <TextContainer>{name}</TextContainer>
+            
+          </NavLink>
           </Button>
+      </HashRouter>
         );
       })}
     </Container>
+    
   );
 };
 

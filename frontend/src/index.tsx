@@ -1,10 +1,10 @@
 import React, { ComponentType } from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
+import Profile from './features/profile/index';
 
 import App from './app/App';
-
-import './index.css';
+//import './index.css';
 
 declare global {
   interface NodeModule {
