@@ -39,12 +39,21 @@ const Button = styled.button.attrs(props => ({
   border: 2px solid ${props => props.theme.borderColor};
   border-radius: 3px;
   
-  ${({ isActive }) => isActive && css`font-size: 2em;`}
+  ${({ isActive }) => isActive && css``}
 `;
 
 const IconContainer = styled.div``;
 const TextContainer = styled.div``;
 
+const activeClassName = 'nav-item-active'
+const StyledNavLink = styled(NavLink).attrs({activeClassName})`
+  &.${activeClassName} {
+    color: ${props => props.theme.color};
+  }
+  $.{style} {
+    color: ${props => props.theme.color};
+  }
+`;
 
 const TabDescriptions: {
   tab: TabId;
@@ -86,17 +95,15 @@ const NavBar: FunctionComponent<{
         return (
           <HashRouter>
           <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
-          <NavLink 
-            activeClassName={"Button"} 
+          <StyledNavLink 
             exact to={"/" + name}
             activeStyle={{
-              fontSize: 32
+              fontSize: 32,
             }}
             >
               <IconContainer><Icon /></IconContainer>
               <TextContainer>{name}</TextContainer>
-            
-          </NavLink>
+          </StyledNavLink>
           </Button>
       </HashRouter>
         );
