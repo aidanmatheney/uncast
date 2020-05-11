@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import baseStyled, { css, ThemeProvider, ThemedStyledInterface } from 'styled-components';
 import 'react-h5-audio-player/lib/styles.css';
 
 //standard purple theme
@@ -13,6 +13,7 @@ const ThemeStandard = {
     pageBgColor: "#181818",   //library/catalog/profile page background color for top container
     font: "Arial"
   };
+export { ThemeStandard };
 const ThemeStandardChildren = ({ children }: any) => (
   <ThemeProvider theme={ThemeStandard}>{children}</ThemeProvider>
 );
@@ -29,6 +30,7 @@ const ThemeDark = {
   pageBgColor: "#000000",
   font: "Arial"
 };
+export { ThemeDark };
 const ThemeDarkChildren = ({ children }: any) => (
 <ThemeProvider theme={ThemeDark}>{children}</ThemeProvider>
 );
@@ -45,7 +47,11 @@ const ThemeLight = {
   pageBgColor: "#ffffff",
   font: "Arial"
 };
+export { ThemeLight };
 const ThemeLightChildren = ({ children }: any) => (
 <ThemeProvider theme={ThemeLight}>{children}</ThemeProvider>
 );
 export { ThemeLightChildren };
+
+export type Theme = typeof ThemeStandardChildren;
+export const styled = baseStyled as ThemedStyledInterface<Theme>;

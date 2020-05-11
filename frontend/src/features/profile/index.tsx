@@ -1,5 +1,6 @@
-import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
+import React, { memo, useState, FunctionComponent, Component } from 'react';
+import styled, { css, ThemeProvider, ThemedStyledInterface } from 'styled-components';
+import ThemeStandardChildren, { Theme, ThemeLightChildren, ThemeDarkChildren } from "../theme/Theme";
 
 const Container = styled.div`
   background: ${props => props.theme.pgBgColor};
@@ -11,11 +12,22 @@ const Container = styled.div`
   align-content: start;
 `;
 
+const Button = styled.button.attrs(props => ({
+  
+}))`
+  text-align: center;
+  margin: 0.25rem;
+  cursor: pointer;  
+  background: ${props => props.theme.background};
+  color: ${props => props.theme.color};
+  border: 2px solid ${props => props.theme.borderColor};
+  border-radius: 3px;
+`;
+
+
 const Profile: FunctionComponent = () => {
-
-
   return (
-    <Container>PROFILE TEST</Container>
+    <></>
   );
 };
 

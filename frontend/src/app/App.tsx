@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { Component, FunctionComponent, useState, useEffect } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
+
 import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
 import { BrowserRouter, Switch, Route, HashRouter, NavLink, Link } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
@@ -18,13 +19,8 @@ import NavBar from '../features/navbar';
 import TabId from '../common/TabId';
 import { RootState } from './createRootReducer';
 import AdminDashboard from '../features/admin/AdminDashboard';
-import {
-  FaHome,
-  FaCloud,
-  FaUser
-} from 'react-icons/fa';
-import { IconType } from 'react-icons/lib'
-import ThemeStandardChildren, { ThemeLightChildren, ThemeDarkChildren } from "../features/theme/Theme";
+
+import { ThemeStandard, ThemeLight, ThemeDark } from "../features/theme/Theme";
 
 const Wrapper = styled.section`
   padding: 3em,
@@ -51,6 +47,38 @@ const Player = () => (
   />
 );
 
+const Button = styled.button.attrs(props => ({
+  
+}))`
+  text-align: center;
+  margin: 0.25rem;
+  cursor: pointer;  
+  background: ${props => props.theme.background};
+  color: ${props => props.theme.color};
+  border: 2px solid ${props => props.theme.borderColor};
+  border-radius: 3px;
+`;
+
+const ThemeButton = styled.button.attrs(props => ({
+}))`
+  text-align: center;
+  margin: 0.25rem;
+  cursor: pointer;  
+  background: ${props => props.theme.background};
+  color: ${props => props.theme.color};
+  border: 2px solid ${props => props.theme.borderColor};
+  border-radius: 3px;
+`;
+
+const ThemeButtonMenu = styled.button`
+  text-align: center;
+  margin: 0.25rem;
+  background: ${props => props.theme.pageBackground};
+  color: ${props => props.theme.color};
+  border: 2px solid ${props => props.theme.borderColor};
+  border-radius: 3px;
+`;
+
 const NavBarPane = styled.div``;
 
 export const store = createStore();
@@ -62,6 +90,24 @@ const App: FunctionComponent = () => {
 
   const user = useSelector((state: RootState) => state.authentication.user);
 
+  const [themeState, setTheme] = useState(ThemeStandard);
+
+  const ThemeMenu = () => {
+    return (
+      <ThemeButtonMenu>
+        <ThemeButton onClick={() => setTheme(ThemeStandard)}>
+          Standard Theme
+        </ThemeButton>
+        <ThemeButton onClick={() => setTheme(ThemeLight)}>
+          Light Theme
+        </ThemeButton>
+        <ThemeButton onClick={() => setTheme(ThemeDark)}>
+          Dark Theme
+        </ThemeButton>
+      </ThemeButtonMenu>
+    )
+  }
+  
   useEffect(() => {
     // Try to load the user from storage when the app is mounted
     dispatch(loadUser());
@@ -69,7 +115,7 @@ const App: FunctionComponent = () => {
 
   return (
     <Wrapper>
-    <ThemeStandardChildren> 
+    <ThemeProvider theme={themeState}> {/*Theme, TODO: switch between*/}
       <Container>
         <ActivityPane>
           <HashRouter>
@@ -91,16 +137,18 @@ const App: FunctionComponent = () => {
             }} />
           </Switch>)}
           </HashRouter>
+          
         </ActivityPane>
 
         <NavBarPane>
+          <ThemeMenu />
           <Player />
           <AuthenticationMenu />
           <AddStreamMenu />
           <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
         </NavBarPane>
       </Container>
-    </ThemeStandardChildren>
+    </ThemeProvider> {/*Theme, TODO: switch between*/}
     </Wrapper>
   );
 };
