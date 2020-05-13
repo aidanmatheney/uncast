@@ -38,9 +38,7 @@ const IconContainer = styled.div``;
 const TextContainer = styled.div``;
 
 const StyledNavLink = styled(NavLink)`
-  &.nav-item-active {
-    color: ${props => props.theme.color};
-  }
+  color: ${props => props.theme.color};
 `;
 
 const TabDescriptions: {
@@ -72,7 +70,6 @@ const NavBar: FunctionComponent<{
   activeTab,
   onTabClick
 }) => {
-
   return (
     <Container>
       {TabDescriptions.map(({ tab, name, Icon }) => {

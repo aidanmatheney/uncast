@@ -5,7 +5,7 @@ import createRootReducer from './createRootReducer';
 
 export const history = createBrowserHistory();
 
-const loggerMiddleware = (store: any) => (next: any) => (action: { type: any, payload: any }) => {
+const loggerMiddleware = (store: any) => (next: any) => (action: { type: string; payload: any; }) => {
   const beforeState = store.getState();
   next(action);
   const afterState = store.getState();
@@ -22,8 +22,7 @@ const createStore = (preloadedState?: any) => {
   const store = configureStore({
     reducer: createRootReducer(history),
     middleware: [
-      // TODO: eliminate serializable values from all slice states and enable serializableCheck
-      ...getDefaultMiddleware({ serializableCheck: false }),
+      ...getDefaultMiddleware(),
       routerMiddleware(history),
       loggerMiddleware
     ],
