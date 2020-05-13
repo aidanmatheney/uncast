@@ -1,4 +1,4 @@
-import React, { Component, FunctionComponent } from 'react';
+import React, { Component, FunctionComponent, useState } from 'react';
 import styled, { css, ThemeProvider } from 'styled-components';
 import axios from 'axios';
 
@@ -15,6 +15,8 @@ import { IconType } from 'react-icons/lib'
 //import '../../index.css';
 import './form.css';
 import { EventEmitter } from 'events';
+import { useDispatch } from 'react-redux';
+import { subscribe } from '../user/userSlice';
 
 const MenuContainer = styled.div`
   display: grid;
@@ -26,14 +28,14 @@ const MenuContainer = styled.div`
 const MenuButton = styled.button`
   text-align: center;
   margin: 0.25rem;
-  cursor: pointer;  
+  cursor: pointer;
   color: ${props => props.theme.color};
   font-size: 1em;
   width: 525px;
   border: 2px solid ${props => props.theme.borderColor};
   border-radius: 3px;
   background: ${props => props.theme.background};
-`; 
+`;
 
 const AddContainer = styled.div`
   background: ${props => props.theme.addBackground};
@@ -78,7 +80,7 @@ const YouTubeTab: {
   }
 ];
 
- 
+
 
 const IconContainer = styled.div``;
 const TextContainer = styled.div``;
@@ -110,7 +112,7 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-  
+
   handleChange(event: any) {
     this.setState({
       value: event.target.value,
@@ -129,7 +131,7 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
     .then(res => {
       console.log(res.statusText)
     })
-    
+
 
     event.preventDefault();
   }
@@ -139,7 +141,7 @@ class FileForm extends React.Component <{}, { value: string; selectedFile: any; 
       <AddContainer>
       <form onSubmit={this.handleSubmit}>
         <label>
-          Audio File: 
+          Audio File:
           <input type="file" value={this.state.value} onChange={this.handleChange} />
         </label>
         <input type="submit" value="Submit" />
@@ -153,59 +155,47 @@ export { FileForm };
 
 //-----------------------------------------------------------------------------------------
 //for getting RSS input
-class RSSForm extends React.Component <{}, { value: string; selectedRSS: any;}> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      value: '',
-      selectedRSS: '',
-  };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+const RSSForm: FunctionComponent = () => {
+  const [feedUrl, setFeedUrl] = useState('');
 
-  handleChange(event: any) {
-    this.setState({
-      value: event.target.value,
-      selectedRSS: event.target.value,
-    });
-    
-  }
+  const dispatch = useDispatch();
 
-  handleSubmit(event: any) {
-    alert('A name was submitted: ' + this.state.value);
-    const data = {selectedRSS: this.state.selectedRSS}
-
-    fetch('http://localhost:3306/customrsspodcast', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    .then(res => {
-      console.log(res.statusText)
-    })
-
-
-    
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-  }
 
-  render() {
-    return (
-      <AddContainer>
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          RSS Feed Link: 
-          <input id="selectedRSS" type="text" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-      </AddContainer>
-    );
-  }
-}
+    console.log('A name was submitted: ' + feedUrl);
+
+    dispatch(subscribe({
+      name: `Podcast${new Date()}`,
+      author: 'Author',
+      description: 'Description',
+      feedUrl: feedUrl
+    }));
+
+    // fetch('http://localhost:3306/customrsspodcast', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(data)
+    // })
+    // .then(res => {
+    //   console.log(res.statusText)
+    // })
+  };
+
+  return (
+    <AddContainer>
+    <form onSubmit={handleSubmit}>
+      <label>
+        RSS Feed Link:
+        <input id="selectedRSS" type="text" value={feedUrl} onChange={({ target: { value } }) => setFeedUrl(value)} />
+      </label>
+      <input type="submit" value="Submit" />
+    </form>
+    </AddContainer>
+  );
+};
 
 export { RSSForm };
 //-----------------------------------------------------------------------------------------
@@ -235,7 +225,7 @@ class YTForm extends React.Component <{}, { value: string }> {
       <AddContainer>
       <form onSubmit={this.handleSubmit}>
         <label>
-          YouTube Channel Link: 
+          YouTube Channel Link:
           <input type="text" value={this.state.value} onChange={this.handleChange} />
         </label>
         <input type="submit" value="Submit" />
@@ -267,7 +257,7 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
       });
     }
   }
-    
+
   render() {
     return (
       <MenuContainer>
@@ -290,7 +280,7 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
                 <YTMenu /> :
                 null
               }
-         
+
             </div>
           );
         })}

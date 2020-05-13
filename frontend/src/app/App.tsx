@@ -7,23 +7,21 @@ import { BrowserRouter, Switch, Route, HashRouter, NavLink, Link } from 'react-r
 import { ConnectedRouter } from 'connected-react-router';
 import styled, { css, ThemeProvider } from 'styled-components';
 import createStore, { history } from './createStore';
-import { loadUser } from '../features/authentication/authenticationSlice';
+import { loadFromStore, saveToStore } from '../features/user/userSlice';
 
 import AddStreamMenu from '../features/addstream';
-import AuthenticationMenu from '../features/authentication/AuthenticationMenu';
-import AuthenticationCallbacks from '../features/authentication/AuthenticationCallbacks';
 import Library from '../features/library';
 import Catalog from '../features/catalog';
 import Profile from '../features/profile';
 import NavBar from '../features/navbar';
 import TabId from '../common/TabId';
 import { RootState } from './createRootReducer';
-import AdminDashboard from '../features/admin/AdminDashboard';
 
 import { ThemeStandard, ThemeLight, ThemeDark } from "../features/theme/Theme";
+import { useInterval } from '../common/hooks';
 
 const Wrapper = styled.section`
-  padding: 3em,
+  /* padding: 3em; */
   background: ${props => props.theme.pageBgColor};
 `;
 
@@ -36,7 +34,7 @@ const Container = styled.div`
 
 const ActivityPane = styled.div`
   flex-grow: 1;
-  
+
 `;
 
 //react-h5-player
@@ -47,23 +45,20 @@ const Player = () => (
   />
 );
 
-const Button = styled.button.attrs(props => ({
-  
-}))`
+const Button = styled.button`
   text-align: center;
   margin: 0.25rem;
-  cursor: pointer;  
+  cursor: pointer;
   background: ${props => props.theme.background};
   color: ${props => props.theme.color};
   border: 2px solid ${props => props.theme.borderColor};
   border-radius: 3px;
 `;
 
-const ThemeButton = styled.button.attrs(props => ({
-}))`
+const ThemeButton = styled.button`
   text-align: center;
   margin: 0.25rem;
-  cursor: pointer;  
+  cursor: pointer;
   background: ${props => props.theme.background};
   color: ${props => props.theme.color};
   border: 2px solid ${props => props.theme.borderColor};
@@ -88,67 +83,64 @@ const App: FunctionComponent = () => {
 
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
 
-  const user = useSelector((state: RootState) => state.authentication.user);
-
   const [themeState, setTheme] = useState(ThemeStandard);
 
-  const ThemeMenu = () => {
-    return (
-      <ThemeButtonMenu>
-        <ThemeButton onClick={() => setTheme(ThemeStandard)}>
-          Standard Theme
-        </ThemeButton>
-        <ThemeButton onClick={() => setTheme(ThemeLight)}>
-          Light Theme
-        </ThemeButton>
-        <ThemeButton onClick={() => setTheme(ThemeDark)}>
-          Dark Theme
-        </ThemeButton>
-      </ThemeButtonMenu>
-    )
-  }
-  
+  const themeMenu = (
+    <ThemeButtonMenu>
+      <ThemeButton onClick={() => setTheme(ThemeStandard)}>
+        Standard Theme
+      </ThemeButton>
+      <ThemeButton onClick={() => setTheme(ThemeLight)}>
+        Light Theme
+      </ThemeButton>
+      <ThemeButton onClick={() => setTheme(ThemeDark)}>
+        Dark Theme
+      </ThemeButton>
+    </ThemeButtonMenu>
+  );
+
   useEffect(() => {
     // Try to load the user from storage when the app is mounted
-    dispatch(loadUser());
+    dispatch(loadFromStore());
   }, [dispatch]);
+
+  useInterval(() => {
+    dispatch(saveToStore());
+  }, 5000);
 
   return (
     <Wrapper>
-    <ThemeProvider theme={themeState}> {/*Theme, TODO: switch between*/}
-      <Container>
-        <ActivityPane>
-          <HashRouter>
-          {user && (<Switch>
-            <Route exact path="/" component={Library} />
-            <Route exact path="/Library" component={Library} />
-            <Route exact path="/catalog" component={Catalog} />
-            <Route exact path="/profile" component={Profile} />
+      <ThemeProvider theme={themeState}> {/*Theme, TODO: switch between*/}
+        <Container>
+          <ActivityPane>
+            <HashRouter>
+              <Switch>
+                <Route exact path="/" component={Library} />
+                <Route exact path="/Library" component={Library} />
+                <Route exact path="/catalog" component={Catalog} />
+                <Route exact path="/profile" component={Profile} />
 
-            <Route path="/admin" component={AdminDashboard} />
+                <Route render={props => {
+                  return (
+                    <div>
+                      <div>Unmatched route:</div>
+                      <pre>{JSON.stringify(props, null, 2)}</pre>
+                    </div>
+                  );
+                }} />
+              </Switch>
+            </HashRouter>
 
-            <Route render={props => {
-              return (
-                <div>
-                  <div>Unmatched route:</div>
-                  <pre>{JSON.stringify(props, null, 2)}</pre>
-                </div>
-              );
-            }} />
-          </Switch>)}
-          </HashRouter>
-          
-        </ActivityPane>
+          </ActivityPane>
 
-        <NavBarPane>
-          <ThemeMenu />
-          <Player />
-          <AuthenticationMenu />
-          <AddStreamMenu />
-          <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
-        </NavBarPane>
-      </Container>
-    </ThemeProvider> {/*Theme, TODO: switch between*/}
+          <NavBarPane>
+            {themeMenu}
+            <Player />
+            <AddStreamMenu />
+            <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
+          </NavBarPane>
+        </Container>
+      </ThemeProvider> {/*Theme, TODO: switch between*/}
     </Wrapper>
   );
 };
@@ -157,9 +149,7 @@ const WrappedApp: typeof App = props => (
   <ReduxProvider store={store}>
     <ConnectedRouter history={history}>
       <BrowserRouter>
-        <AuthenticationCallbacks>
-          <App {...props} />
-        </AuthenticationCallbacks>
+        <App {...props} />
       </BrowserRouter>
     </ConnectedRouter>
   </ReduxProvider>

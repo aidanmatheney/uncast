@@ -1,8 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { LibraryRssPodcast } from '../../common/web-api';
+import { RssPodcast } from '../../common/entities';
 import PodcastCard from './PodcastCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/createRootReducer';
 
 const Container = styled.div`
   background: ${props => props.theme.pgBgColor};
@@ -19,12 +21,14 @@ const CardContainer = styled.div`
 `;
 
 const Library: FunctionComponent = () => {
-  const podcasts: LibraryRssPodcast[] = []; // TODO: Select from redux store
+  const subscriptions = useSelector((state: RootState) => state.user.subscriptions);
+
+  console.log('Library subscriptions', subscriptions)
 
   return (
     <Container>
-      {podcasts && podcasts.map(p => (
-        <CardContainer key={p.id}>
+      {subscriptions && Object.values(subscriptions).map(p => (
+        <CardContainer key={p.name}>
           <PodcastCard podcast={p} />
         </CardContainer>
       ))}

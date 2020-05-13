@@ -2,7 +2,7 @@ import React, { FunctionComponent, useMemo } from 'react';
 import styled from 'styled-components/macro';
 import { xml2js } from 'xml-js';
 import { useTextFetch } from '../../common/hooks'
-import { LibraryRssPodcast }  from '../../common/web-api';
+import { RssPodcast, PodcastType }  from '../../common/entities';
 
 const Container = styled.div``;
 
@@ -14,11 +14,12 @@ const Img = styled.img`
 `;
 
 const PodcastCard: FunctionComponent<{
-  podcast: LibraryRssPodcast;
+  podcast: PodcastType;
 }> = ({
   podcast
 }) => {
-  const { text: rss, isLoading } = useTextFetch(podcast.feedUrl!, { });
+  const feedUrl = (podcast as RssPodcast).feedUrl || 'https://podcasts.files.bbci.co.uk/p02nq0gn.rss'; // TODO
+  const { text: rss, isLoading } = useTextFetch(feedUrl, { });
 
   const info = useMemo(() => {
     if (rss == null) {
@@ -28,7 +29,8 @@ const PodcastCard: FunctionComponent<{
     const doc = xml2js(rss);
     const entries = doc.elements[0].elements[0].elements;
 
-    const title = entries
+    try {
+      const title = entries
       .find((el: any) => el.name === 'title')
       .elements[0].text;
     const url = entries
@@ -45,6 +47,15 @@ const PodcastCard: FunctionComponent<{
         url,
         imageUrl
       };
+    } catch (err) {
+      console.error('Error parsing feed', { err, rss, doc, entries });
+      return {
+        title: 'TITLE',
+        url: 'http://example.com'
+      }
+    }
+
+
   }, [rss]);
 
   return (

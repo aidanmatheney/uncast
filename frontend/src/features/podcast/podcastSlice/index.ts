@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { PodcastBase } from '../../../common/web-api';
+import { PodcastBase } from '../../../common/entities';
 
 const sliceName = 'podcast';
 

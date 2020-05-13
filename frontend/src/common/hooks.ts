@@ -1,22 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { useFetch, FetchOptions } from 'react-async';
 import { RootState } from '../app/createRootReducer';
-
-export const useUser = () => useSelector((state: RootState) => state.authentication.user);
-export const useAccessToken = () => useSelector((state: RootState) => state.authentication.user?.access_token);
-
-export const useAuthenticatedRequestOptions = () => {
-  const accessToken = useAccessToken();
-
-  const headers: Record<string, string> = { };
-  if (accessToken != null) {
-    headers['Authorization'] = `Bearer ${accessToken}`;
-  }
-
-  const options: Partial<RequestInit> = { headers };
-  return options;
-};
 
 export const useResponseText = (response: Response | null | undefined) => {
   const [text, setText] = useState<string | undefined>(undefined);
@@ -48,3 +33,24 @@ export const useTextFetch = (
     text
   };
 };
+
+
+export function useInterval(callback: () => void, delay: number | null) {
+  const savedCallback = useRef<() => void>();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current!();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
