@@ -1,22 +1,19 @@
-import React, { Component, FunctionComponent, useState } from 'react';
-import styled, { css, ThemeProvider } from 'styled-components';
-import axios from 'axios';
-
-import UserTabId from '../../common/UserTabId';
-import AddStreamTabId from '../../common/AddStreamTabId';
-
+import React, { FunctionComponent, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import styled from 'styled-components';
 import {
   FaPlus,
   FaFileUpload,
-  FaRss,
-  FaYoutube
+  FaRss
 } from 'react-icons/fa';
-import { IconType } from 'react-icons/lib'
-//import '../../index.css';
-import './form.css';
-import { EventEmitter } from 'events';
-import { useDispatch } from 'react-redux';
+import { IconType } from 'react-icons/lib';
+
 import { subscribe } from '../user/userSlice';
+import UserTabId from '../../common/UserTabId';
+import AddStreamTabId from '../../common/AddStreamTabId';
+
+import './form.css';
 
 const MenuContainer = styled.div`
   display: grid;
@@ -68,20 +65,6 @@ const RSSTab: {
   }
 ];
 
-const YouTubeTab: {
-  tab: AddStreamTabId;
-  name: string;
-  Icon: IconType;
-}[] = [
-  {
-    tab: AddStreamTabId.AddYouTube,
-    name: 'Add from YouTube',
-    Icon: FaYoutube
-  }
-];
-
-
-
 const IconContainer = styled.div``;
 const TextContainer = styled.div``;
 
@@ -89,7 +72,6 @@ const TabDescriptions: {
   tab: UserTabId;
   name: string;
   Icon: IconType;
-
 }[] = [
   {
     tab: UserTabId.AddAudio,
@@ -98,71 +80,36 @@ const TabDescriptions: {
   }
 ];
 
-//-----------------------------------------------------------------------------------------
-//for getting file input
-class FileForm extends React.Component <{}, { value: string; selectedFile: any; loaded: any}> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      value: '',
-      selectedFile: null,
-      loaded: 0,
-    };
+export const FileForm: FunctionComponent = () => {
+  const { register, handleSubmit } = useForm<{
+    files: FileList;
+  }>();
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  const onSubmit = handleSubmit(({ files }) => {
+    console.log('FileFormFC onSubmit', { files });
+  });
 
-  handleChange(event: any) {
-    this.setState({
-      value: event.target.value,
-      selectedFile: event.target.files[0],
-      loaded: 0,
-    });
-    console.log(event.target.files[0]);
-  }
-
-  handleSubmit(event: any) {
-    //Add file
-    const data = new FormData()
-    data.append('file',this.state.selectedFile)
-    axios.post("http://localhost:8000/upload", data, {
-    })
-    .then(res => {
-      console.log(res.statusText)
-    })
-
-
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <AddContainer>
-      <form onSubmit={this.handleSubmit}>
+  return (
+    <AddContainer>
+      <form onSubmit={onSubmit}>
         <label>
           Audio File:
-          <input type="file" value={this.state.value} onChange={this.handleChange} />
+          <input type="file" name="files" ref={register} />
         </label>
         <input type="submit" value="Submit" />
       </form>
-      </AddContainer>
-    );
-  }
-}
-export { FileForm };
-//-----------------------------------------------------------------------------------------
+    </AddContainer>
+  );
+};
 
-//-----------------------------------------------------------------------------------------
-//for getting RSS input
-const RSSForm: FunctionComponent = () => {
-  const [feedUrl, setFeedUrl] = useState('');
-
+export const RSSForm: FunctionComponent = () => {
   const dispatch = useDispatch();
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const { register, handleSubmit } = useForm<{
+    feedUrl: string;
+  }>();
 
+  const onSubmit = handleSubmit(({ feedUrl }) => {
     console.log('A name was submitted: ' + feedUrl);
 
     dispatch(subscribe({
@@ -171,14 +118,14 @@ const RSSForm: FunctionComponent = () => {
       description: 'Description',
       feedUrl: feedUrl
     }));
-  };
+  });
 
   return (
     <AddContainer>
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit}>
       <label>
         RSS Feed Link:
-        <input id="selectedRSS" type="text" value={feedUrl} onChange={({ target: { value } }) => setFeedUrl(value)} />
+        <input type="text" name="feedUrl" ref={register} />
       </label>
       <input type="submit" value="Submit" />
     </form>
@@ -186,217 +133,60 @@ const RSSForm: FunctionComponent = () => {
   );
 };
 
-export { RSSForm };
-//-----------------------------------------------------------------------------------------
+export const AddStreamMenu: FunctionComponent = () => {
+  const [show, setShow] = useState(false);
 
-//-----------------------------------------------------------------------------------------
-//for getting YouTube input
-class YTForm extends React.Component <{}, { value: string }> {
-  constructor(props: any) {
-    super(props);
-    this.state = {value: ''};
+  return (
+    <MenuContainer>
+      {TabDescriptions.map(({ tab, name, Icon }) => (
+        <div>
+          <MenuButton key={tab} onClick={() => setShow(!show)}>
+            <IconContainer><Icon /></IconContainer>
+            <TextContainer>{name}</TextContainer>
+          </MenuButton>
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event: any) {
-    this.setState({value: event.target.value});
-  }
-
-  handleSubmit(event: any) {
-    alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <AddContainer>
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          YouTube Channel Link:
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-      </AddContainer>
-    );
-  }
-}
-
-export { YTForm };
-//-----------------------------------------------------------------------------------------
-
-class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      showComponent: false,
-    };
-    this._onButtonClick = this._onButtonClick.bind(this);
-  }
-  _onButtonClick() {
-    if(this.state.showComponent === false) {
-      this.setState ({
-        showComponent: true,
-      });
-    } else if (this.state.showComponent === true) {
-      this.setState ({
-        showComponent: false,
-      });
-    }
-  }
-
-  render() {
-    return (
-      <MenuContainer>
-        {TabDescriptions.map(({ tab, name, Icon }) => {
-          return (
-            <div>
-              <MenuButton key={tab} onClick={this._onButtonClick}>
-                <IconContainer><Icon /></IconContainer>
-                <TextContainer>{name}</TextContainer>
-              </MenuButton>
-              {this.state.showComponent ?
-                <FileMenu /> :
-                null
-              }
-              {this.state.showComponent ?
-                <RSSMenu /> :
-                null
-              }
-
-            </div>
-          );
-        })}
-      </MenuContainer>
-    );
-  }
+          {show && <>
+            <FileMenu />
+            <RSSMenu />
+          </>}
+        </div>
+      ))}
+    </MenuContainer>
+  );
 };
 
-class FileMenu extends React.Component<{}, { showComponent: boolean }> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      showComponent: false,
-    };
-    this._onButtonClick = this._onButtonClick.bind(this);
-  }
-  _onButtonClick() {
-    if(this.state.showComponent === false) {
-      this.setState ({
-        showComponent: true,
-      });
-    } else if (this.state.showComponent === true) {
-      this.setState ({
-        showComponent: false,
-      });
-    }
-  }
-  render() {
-    return (
-      <MenuContainer>
-        {FileTab.map(({ tab, name, Icon }) => {
-          return (
-            <div>
-              <MenuButton key={tab} onClick={this._onButtonClick}>
-                <IconContainer><Icon /></IconContainer>
-                <TextContainer>{name}</TextContainer>
-              </MenuButton>
-              {this.state.showComponent ?
-                <FileForm /> :
-                null
-              }
-            </div>
-          );
-        })}
-      </MenuContainer>
-    );
-  }
+export const FileMenu: FunctionComponent = () => {
+  const [show, setShow] = useState(false);
+
+  return (
+    <MenuContainer>
+      {FileTab.map(({ tab, name, Icon }) => (
+        <div>
+          <MenuButton key={tab} onClick={() => setShow(!show)}>
+            <IconContainer><Icon /></IconContainer>
+            <TextContainer>{name}</TextContainer>
+          </MenuButton>
+          {show && <FileForm />}
+        </div>
+      ))}
+    </MenuContainer>
+  );
 };
 
-class RSSMenu extends React.Component<{}, { showComponent: boolean }> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      showComponent: false,
-    };
-    this._onButtonClick = this._onButtonClick.bind(this);
-  }
-  _onButtonClick() {
-    if(this.state.showComponent === false) {
-      this.setState ({
-        showComponent: true,
-      });
-    } else if (this.state.showComponent === true) {
-      this.setState ({
-        showComponent: false,
-      });
-    }
-  }
-  render() {
-    return (
-      <MenuContainer>
-        {RSSTab.map(({ tab, name, Icon }) => {
-          return (
-            <div>
-              <MenuButton key={tab} onClick={this._onButtonClick}>
-                <IconContainer><Icon /></IconContainer>
-                <TextContainer>{name}</TextContainer>
-              </MenuButton>
-              {this.state.showComponent ?
-                <RSSForm /> :
-                null
-              }
-            </div>
-          );
-        })}
-      </MenuContainer>
-    );
-  }
-};
+export const RSSMenu: FunctionComponent = () => {
+  const [show, setShow] = useState(false);
 
-class YTMenu extends React.Component<{}, { showComponent: boolean }> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      showComponent: false,
-    };
-    this._onButtonClick = this._onButtonClick.bind(this);
-  }
-  _onButtonClick() {
-    if(this.state.showComponent === false) {
-      this.setState ({
-        showComponent: true,
-      });
-    } else if (this.state.showComponent === true) {
-      this.setState ({
-        showComponent: false,
-      });
-    }
-  }
-  /*
-  render() {
-    return (
-      <MenuContainer>
-        {YouTubeTab.map(({ tab, name, Icon }) => {
-          return (
-            <div>
-              <MenuButton key={tab} onClick={this._onButtonClick}>
-                <IconContainer><Icon /></IconContainer>
-                <TextContainer>{name}</TextContainer>
-              </MenuButton>
-              {this.state.showComponent ?
-                <YTForm /> :
-                null
-              }
-            </div>
-          );
-        })}
-      </MenuContainer>
-    );
-  }
-  */
+  return (
+    <MenuContainer>
+      {RSSTab.map(({ tab, name, Icon }) => (
+        <div>
+          <MenuButton key={tab} onClick={() => setShow(!show)}>
+            <IconContainer><Icon /></IconContainer>
+            <TextContainer>{name}</TextContainer>
+          </MenuButton>
+          {show && <RSSForm />}
+        </div>
+      ))}
+    </MenuContainer>
+  );
 };
-
-export default AddStreamMenu;

@@ -1,7 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { PodcastBase } from '../../../common/entities';
-
-const sliceName = 'podcast';
 
 interface PodcastSliceState {
   podcastById: Record<string, PodcastBase>;
@@ -12,7 +10,7 @@ const initialState: PodcastSliceState = {
 };
 
 export const podcastSlice = createSlice({
-  name: sliceName,
+  name: 'podcast',
   initialState,
   reducers: {
 
@@ -22,8 +20,8 @@ export const podcastSlice = createSlice({
   }
 });
 
-export const {
+// export const {
 
-} = podcastSlice.actions;
+// } = podcastSlice.actions;
 
 export default podcastSlice.reducer;

@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useFetch, FetchOptions } from 'react-async';
-import { RootState } from '../app/createRootReducer';
 
 export const useResponseText = (response: Response | null | undefined) => {
   const [text, setText] = useState<string | undefined>(undefined);

@@ -1,26 +1,22 @@
-import React, { Component, FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
-import ReactAudioPlayer from 'react-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
-import cookie, { CookiesProvider, useCookies } from 'react-cookie';
-import Cookies from 'js-cookie';
 
-import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
-import { BrowserRouter, Switch, Route, HashRouter, NavLink, Link } from 'react-router-dom';
+import { Provider as ReduxProvider, useDispatch } from 'react-redux';
+import { BrowserRouter, Switch, Route, HashRouter } from 'react-router-dom';
 import { ConnectedRouter } from 'connected-react-router';
-import styled, { css, ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import createStore, { history } from './createStore';
 import { loadFromStore, saveToStore } from '../features/user/userSlice';
 
-import AddStreamMenu from '../features/addstream';
+import { AddStreamMenu } from '../features/addstream';
 import Library from '../features/library';
 import Catalog from '../features/catalog';
 import Profile from '../features/profile';
 import NavBar from '../features/navbar';
 import TabId from '../common/TabId';
-import { RootState } from './createRootReducer';
 
-import { ThemeStandard, ThemeLight, ThemeDark } from "../features/theme/Theme";
+import { standardTheme, lightTheme, darkTheme } from "../features/theme";
 import { useInterval } from '../common/hooks';
 
 const Wrapper = styled.section`
@@ -41,20 +37,35 @@ const ActivityPane = styled.div`
 `;
 
 //react-h5-player
-const Player = (player: any) => {
-  const [cookies, setCookie] = useCookies(['playback']);
-  player = React.createRef();
-  var loadFromCookie = false;
+const Player: FunctionComponent<{
+  audioUrl: string;
+
+  startTime?: number;
+  onTimeChanged?(time: number): void;
+}> = ({
+  audioUrl,
+
+  startTime,
+  onTimeChanged
+}) => {
+  const playerRef = useRef<AudioPlayer>(null);
+  const player = playerRef.current;
+  const audio = player?.audio.current;
+
+  const [loadedStartTime, setLoadedStartTime] = useState<boolean>(false);
+
   return (
     <div>
       <AudioPlayer
-        ref={player}
-        src="http://traffic.libsyn.com/joeroganexp/p1472.mp3"  //just an example for testing, replace with any audio
-        onListen={e => setCookie('playback', Math.floor(player.current.audio.current.currentTime), { path: '/' } )}
-        onCanPlay={e => 
-          {if (loadFromCookie === false) {
-            player.current.audio.current.currentTime = Cookies.get('playback');
-            loadFromCookie = true;
+        ref={playerRef}
+        src={audioUrl}
+
+        onListen={() => onTimeChanged?.(audio!.currentTime)}
+
+        onCanPlay={() => {
+          if (startTime != null && !loadedStartTime) {
+            audio!.currentTime = startTime;
+            setLoadedStartTime(true);
           }
         }}
       />
@@ -62,15 +73,15 @@ const Player = (player: any) => {
   )
 };
 
-const Button = styled.button`
-  text-align: center;
-  margin: 0.25rem;
-  cursor: pointer;
-  background: ${props => props.theme.background};
-  color: ${props => props.theme.color};
-  border: 2px solid ${props => props.theme.borderColor};
-  border-radius: 3px;
-`;
+// const Button = styled.button`
+//   text-align: center;
+//   margin: 0.25rem;
+//   cursor: pointer;
+//   background: ${props => props.theme.background};
+//   color: ${props => props.theme.color};
+//   border: 2px solid ${props => props.theme.borderColor};
+//   border-radius: 3px;
+// `;
 
 const ThemeButton = styled.button`
   text-align: center;
@@ -100,17 +111,17 @@ const App: FunctionComponent = () => {
 
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
 
-  const [themeState, setTheme] = useState(ThemeStandard);
+  const [theme, setTheme] = useState(standardTheme);
 
   const themeMenu = (
     <ThemeButtonMenu>
-      <ThemeButton onClick={() => setTheme(ThemeStandard)}>
+      <ThemeButton onClick={() => setTheme(standardTheme)}>
         Standard Theme
       </ThemeButton>
-      <ThemeButton onClick={() => setTheme(ThemeLight)}>
+      <ThemeButton onClick={() => setTheme(lightTheme)}>
         Light Theme
       </ThemeButton>
-      <ThemeButton onClick={() => setTheme(ThemeDark)}>
+      <ThemeButton onClick={() => setTheme(darkTheme)}>
         Dark Theme
       </ThemeButton>
     </ThemeButtonMenu>
@@ -127,7 +138,7 @@ const App: FunctionComponent = () => {
 
   return (
     <Wrapper>
-      <ThemeProvider theme={themeState}> {/*Theme, TODO: switch between*/}
+      <ThemeProvider theme={theme}> {/*Theme, TODO: switch between*/}
         <Container>
           <ActivityPane>
             <HashRouter>
@@ -152,7 +163,7 @@ const App: FunctionComponent = () => {
 
           <NavBarPane>
             {themeMenu}
-            <Player />
+            <Player audioUrl="http://traffic.libsyn.com/joeroganexp/p1472.mp3" />
             <AddStreamMenu />
             <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
           </NavBarPane>

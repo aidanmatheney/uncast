@@ -1,10 +1,9 @@
 import React, { FunctionComponent } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { RssPodcast } from '../../common/entities';
-import PodcastCard from './PodcastCard';
-import { useSelector } from 'react-redux';
 import { RootState } from '../../app/createRootReducer';
+import PodcastCard from './PodcastCard';
 
 const Container = styled.div`
   background: ${props => props.theme.pgBgColor};
