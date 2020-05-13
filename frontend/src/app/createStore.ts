@@ -1,9 +1,5 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import { routerMiddleware } from 'connected-react-router'
-import { createBrowserHistory } from 'history';
-import createRootReducer from './createRootReducer';
-
-export const history = createBrowserHistory();
+import rootReducer from './rootReducer';
 
 const loggerMiddleware = (store: any) => (next: any) => (action: { type: string; payload: any; }) => {
   const beforeState = store.getState();
@@ -20,10 +16,9 @@ const loggerMiddleware = (store: any) => (next: any) => (action: { type: string;
 
 const createStore = (preloadedState?: any) => {
   const store = configureStore({
-    reducer: createRootReducer(history),
+    reducer: rootReducer,
     middleware: [
       ...getDefaultMiddleware(),
-      routerMiddleware(history),
       loggerMiddleware
     ],
     devTools: true,
@@ -33,9 +28,9 @@ const createStore = (preloadedState?: any) => {
   // Hot reloading
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
-    module.hot.accept('./createRootReducer', async () => {
-      const newCreateRootReducer = (await import('./createRootReducer')).default;
-      store.replaceReducer(newCreateRootReducer(history));
+    module.hot.accept('./rootReducer', async () => {
+      const newRootReducer = (await import('./rootReducer')).default;
+      store.replaceReducer(newRootReducer);
     });
   }
 

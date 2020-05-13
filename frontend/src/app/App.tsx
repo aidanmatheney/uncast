@@ -3,10 +3,9 @@ import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
 import { Provider as ReduxProvider, useDispatch } from 'react-redux';
-import { BrowserRouter, Switch, Route, HashRouter } from 'react-router-dom';
-import { ConnectedRouter } from 'connected-react-router';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
-import createStore, { history } from './createStore';
+import createStore from './createStore';
 import { loadFromStore, saveToStore } from '../features/user/userSlice';
 
 import { AddStreamMenu } from '../features/addstream';
@@ -143,24 +142,17 @@ const App: FunctionComponent = () => {
       <ThemeProvider theme={theme}> {/*Theme, TODO: switch between*/}
         <Container>
           <ActivityPane>
-            <HashRouter>
-              <Switch>
-                <Route exact path="/" component={Library} />
-                <Route exact path="/Library" component={Library} />
-                <Route exact path="/catalog" component={Catalog} />
-                <Route exact path="/profile" component={Profile} />
+            <Routes>
+              <Route path="/" element={<Library />} />
+              <Route path="/Library" element={<Library />} />
+              <Route path="/catalog" element={<Catalog />} />
+              <Route path="/profile" element={<Profile />} />
 
-                <Route render={props => {
-                  return (
-                    <div>
-                      <div>Unmatched route:</div>
-                      <pre>{JSON.stringify(props, null, 2)}</pre>
-                    </div>
-                  );
-                }} />
-              </Switch>
-            </HashRouter>
-
+              <Route element={<div>
+                <div>Unmatched route:</div>
+                <pre>{JSON.stringify(window.location, null, 2)}</pre>
+              </div>} />
+            </Routes>
           </ActivityPane>
 
           <NavBarPane>
@@ -177,11 +169,9 @@ const App: FunctionComponent = () => {
 
 const WrappedApp: typeof App = props => (
   <ReduxProvider store={store}>
-    <ConnectedRouter history={history}>
-      <BrowserRouter>
-        <App {...props} />
-      </BrowserRouter>
-    </ConnectedRouter>
+    <BrowserRouter>
+      <App {...props} />
+    </BrowserRouter>
   </ReduxProvider>
 );
 

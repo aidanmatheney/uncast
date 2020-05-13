@@ -77,7 +77,7 @@ const NavBar: FunctionComponent<{
 
         return (
           <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
-            <StyledNavLink exact to={`/${name}`} activeStyle={{ fontSize: 32 }}>
+            <StyledNavLink to={`/${name}`} activeStyle={{ fontSize: 32 }}>
               <IconContainer><Icon /></IconContainer>
               <TextContainer>{name}</TextContainer>
             </StyledNavLink>
