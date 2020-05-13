@@ -93,13 +93,15 @@ const ThemeButton = styled.button`
   border-radius: 3px;
 `;
 
-const ThemeButtonMenu = styled.button`
+const ThemeButtonMenu = styled.div`
   text-align: center;
   margin: 0.25rem;
   background: ${props => props.theme.pageBackground};
   color: ${props => props.theme.color};
   border: 2px solid ${props => props.theme.borderColor};
   border-radius: 3px;
+
+  display: inline-block;
 `;
 
 const NavBarPane = styled.div``;

@@ -139,7 +139,7 @@ export const AddStreamMenu: FunctionComponent = () => {
   return (
     <MenuContainer>
       {TabDescriptions.map(({ tab, name, Icon }) => (
-        <div>
+        <div key={tab}>
           <MenuButton key={tab} onClick={() => setShow(!show)}>
             <IconContainer><Icon /></IconContainer>
             <TextContainer>{name}</TextContainer>

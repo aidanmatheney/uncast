@@ -6,11 +6,16 @@ import createRootReducer from './createRootReducer';
 export const history = createBrowserHistory();
 
 const loggerMiddleware = (store: any) => (next: any) => (action: { type: any, payload: any }) => {
-  console.log("Action type:", action.type);
-  console.log("Action payload:", action.payload);
-  console.log("State before:", store.getState());
+  const beforeState = store.getState();
   next(action);
-  console.log("State after:", store.getState());
+  const afterState = store.getState();
+
+  console.log('Redux action:', {
+    type: action.type,
+    payload: action.payload,
+    beforeState,
+    afterState
+  });
 };
 
 const createStore = (preloadedState?: any) => {

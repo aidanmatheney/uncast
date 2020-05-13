@@ -13,8 +13,7 @@ import { IconType } from 'react-icons/lib'
 import '../../index.css';
 
 import {
-  NavLink,
-  HashRouter
+  NavLink
 } from "react-router-dom";
 
 const Container = styled.div`
@@ -80,14 +79,12 @@ const NavBar: FunctionComponent<{
         const isActive = activeTab === tab;
 
         return (
-          <HashRouter>
-            <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
-              <StyledNavLink exact to={`/${name}`} activeStyle={{ fontSize: 32 }}>
-                <IconContainer><Icon /></IconContainer>
-                <TextContainer>{name}</TextContainer>
-              </StyledNavLink>
-            </Button>
-          </HashRouter>
+          <Button key={tab} isActive={isActive} onClick={() => onTabClick?.(tab)}>
+            <StyledNavLink exact to={`/${name}`} activeStyle={{ fontSize: 32 }}>
+              <IconContainer><Icon /></IconContainer>
+              <TextContainer>{name}</TextContainer>
+            </StyledNavLink>
+          </Button>
         );
       })}
     </Container>

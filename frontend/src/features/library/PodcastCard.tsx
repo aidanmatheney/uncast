@@ -27,7 +27,10 @@ const PodcastCard: FunctionComponent<{
     }
 
     const doc = xml2js(rss);
-    const entries = doc.elements[0].elements[0].elements;
+    const entries = doc
+      .elements[0]
+      .elements.filter(({ type }: { type: string; }) => type === 'element')[0]
+      .elements;
 
     try {
       const title = entries
