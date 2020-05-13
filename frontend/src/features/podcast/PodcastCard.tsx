@@ -3,6 +3,8 @@ import styled from 'styled-components/macro';
 import { xml2js } from 'xml-js';
 import { useTextFetch } from '../../common/hooks'
 import { RssPodcast, PodcastType }  from '../../common/entities';
+import Popup from 'reactjs-popup'
+import './podcastCard.css'
 
 const Container = styled.div``;
 
@@ -11,6 +13,31 @@ const Img = styled.img`
   max-height: 100%;
 
   border-radius: 4px;
+  cursor: pointer;
+`;
+
+const ImgSmall = styled.img`
+  max-width: 45%;
+  max-height: 45%;
+
+  float: left;
+  border-radius: 4px;
+  column-span: 1;
+  display: grid;
+`;
+
+const PodcastMenu = styled.div`
+  text-align: center;
+  margin: 0.25rem;
+  background: ${props => props.theme.pageBackground};
+  color: ${props => props.theme.color};
+  border: 2px solid ${props => props.theme.borderColor};
+
+  max-width: 45%;
+  max-height: 45%;
+  float: right;
+  word-wrap: normal;
+  display: grid;
 `;
 
 const PodcastCard: FunctionComponent<{
@@ -65,9 +92,18 @@ const PodcastCard: FunctionComponent<{
     <Container>
       {isLoading && '?'}
       {info && (
-        <a href={info.url} target="_blank" rel="noopener noreferrer">
-          <Img src={info.imageUrl} alt={info.title} title={info.title} />
-        </a>
+        <Popup className="modal" modal trigger={<Img src={info.imageUrl} alt={info.title} title={info.title} />} closeOnDocumentClick>
+            <div>
+              <ImgSmall src={info.imageUrl} alt={info.title} title={info.title} />
+              <PodcastMenu>
+                {info.title}
+                <br />
+                <a href={info.url} target="_blank" rel="noopener noreferrer"> View more info </a>
+                <br />
+                description description description description description description description description description description description description description description description description
+              </PodcastMenu>
+            </div>
+        </Popup>
       )}
     </Container>
   );
