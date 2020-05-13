@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Uncast.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:Uncast.WebApi.Mvc.AppControllerBase.GetAppUserAsync">
+            <summary>
+            Gets the current user, or <see langword="null"/> if they are not authenticated.
+            </summary>
+        </member>
+        <member name="M:Uncast.WebApi.Mvc.AppControllerBase.GetAuthenticatedAppUserAsync">
+            <summary>
+            Gets the current user when the application logic should have ensured that they are authenticated.
+            An example of this situation is when the Authorize attribute is placed on the controller.
+            </summary>
+        </member>
+    </members>
+</doc>

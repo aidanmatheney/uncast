@@ -171,17 +171,6 @@ const RSSForm: FunctionComponent = () => {
       description: 'Description',
       feedUrl: feedUrl
     }));
-
-    // fetch('http://localhost:3306/customrsspodcast', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(data)
-    // })
-    // .then(res => {
-    //   console.log(res.statusText)
-    // })
   };
 
   return (
@@ -274,10 +263,6 @@ class AddStreamMenu extends React.Component<{}, { showComponent: boolean }> {
               }
               {this.state.showComponent ?
                 <RSSMenu /> :
-                null
-              }
-              {this.state.showComponent ?
-                <YTMenu /> :
                 null
               }
 
@@ -390,6 +375,7 @@ class YTMenu extends React.Component<{}, { showComponent: boolean }> {
       });
     }
   }
+  /*
   render() {
     return (
       <MenuContainer>
@@ -410,6 +396,7 @@ class YTMenu extends React.Component<{}, { showComponent: boolean }> {
       </MenuContainer>
     );
   }
+  */
 };
 
 export default AddStreamMenu;

@@ -1,0 +1,8 @@
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\bin\Debug\netstandard2.1\Uncast.Data.Naming.deps.json
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\bin\Debug\netstandard2.1\Uncast.Data.Naming.dll
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\bin\Debug\netstandard2.1\Uncast.Data.Naming.pdb
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\obj\Debug\netstandard2.1\Uncast.Data.Naming.csprojAssemblyReference.cache
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\obj\Debug\netstandard2.1\Uncast.Data.Naming.AssemblyInfoInputs.cache
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\obj\Debug\netstandard2.1\Uncast.Data.Naming.AssemblyInfo.cs
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\obj\Debug\netstandard2.1\Uncast.Data.Naming.dll
+C:\Users\Parker\Desktop\Uncast\backend\src\Uncast.Data.Naming\obj\Debug\netstandard2.1\Uncast.Data.Naming.pdb

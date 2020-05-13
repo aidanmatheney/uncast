@@ -1,6 +1,9 @@
 import React, { Component, FunctionComponent, useState, useEffect } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
+import ReactAudioPlayer from 'react-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
+import cookie, { CookiesProvider, useCookies } from 'react-cookie';
+import Cookies from 'js-cookie';
 
 import { Provider as ReduxProvider, useSelector, useDispatch } from 'react-redux';
 import { BrowserRouter, Switch, Route, HashRouter, NavLink, Link } from 'react-router-dom';
@@ -38,12 +41,26 @@ const ActivityPane = styled.div`
 `;
 
 //react-h5-player
-const Player = () => (
-  <AudioPlayer
-    src="https://play.podtrac.com/npr-510306/edge1.pod.npr.org/anon.npr-mp3/npr/asc/2017/10/20171024_asc_japanesebreakfastpodcast.mp3"  //just an example for testing, replace with any audio
-    onPlay={e => console.log("onPlay")}
-  />
-);
+const Player = (player: any) => {
+  const [cookies, setCookie] = useCookies(['playback']);
+  player = React.createRef();
+  var loadFromCookie = false;
+  return (
+    <div>
+      <AudioPlayer
+        ref={player}
+        src="http://traffic.libsyn.com/joeroganexp/p1472.mp3"  //just an example for testing, replace with any audio
+        onListen={e => setCookie('playback', Math.floor(player.current.audio.current.currentTime), { path: '/' } )}
+        onCanPlay={e => 
+          {if (loadFromCookie === false) {
+            player.current.audio.current.currentTime = Cookies.get('playback');
+            loadFromCookie = true;
+          }
+        }}
+      />
+    </div>
+  )
+};
 
 const Button = styled.button`
   text-align: center;
