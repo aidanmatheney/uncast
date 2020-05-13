@@ -13,11 +13,13 @@ import { subscribe } from '../user/userSlice';
 import UserTabId from '../../common/UserTabId';
 import AddStreamTabId from '../../common/AddStreamTabId';
 
-import './form.css';
+const Form = styled.form`
+  color: #181818;
+`;
 
 const MenuContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
   width: 100%;
   background: ${props => props.theme.pageBackground};
 `;
@@ -80,7 +82,7 @@ const TabDescriptions: {
   }
 ];
 
-export const FileForm: FunctionComponent = () => {
+const FileForm: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<{
     files: FileList;
   }>();
@@ -91,18 +93,18 @@ export const FileForm: FunctionComponent = () => {
 
   return (
     <AddContainer>
-      <form onSubmit={onSubmit}>
+      <Form onSubmit={onSubmit}>
         <label>
           Audio File:
           <input type="file" name="files" ref={register} />
         </label>
         <input type="submit" value="Submit" />
-      </form>
+      </Form>
     </AddContainer>
   );
 };
 
-export const RSSForm: FunctionComponent = () => {
+const RSSForm: FunctionComponent = () => {
   const dispatch = useDispatch();
 
   const { register, handleSubmit } = useForm<{
@@ -122,14 +124,50 @@ export const RSSForm: FunctionComponent = () => {
 
   return (
     <AddContainer>
-    <form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit}>
       <label>
         RSS Feed Link:
         <input type="text" name="feedUrl" ref={register} />
       </label>
       <input type="submit" value="Submit" />
-    </form>
+    </Form>
     </AddContainer>
+  );
+};
+
+const FileMenu: FunctionComponent = () => {
+  const [show, setShow] = useState(false);
+
+  return (
+    <MenuContainer>
+      {FileTab.map(({ tab, name, Icon }) => (
+        <div>
+          <MenuButton key={tab} onClick={() => setShow(!show)}>
+            <IconContainer><Icon /></IconContainer>
+            <TextContainer>{name}</TextContainer>
+          </MenuButton>
+          {show && <FileForm />}
+        </div>
+      ))}
+    </MenuContainer>
+  );
+};
+
+const RSSMenu: FunctionComponent = () => {
+  const [show, setShow] = useState(false);
+
+  return (
+    <MenuContainer>
+      {RSSTab.map(({ tab, name, Icon }) => (
+        <div>
+          <MenuButton key={tab} onClick={() => setShow(!show)}>
+            <IconContainer><Icon /></IconContainer>
+            <TextContainer>{name}</TextContainer>
+          </MenuButton>
+          {show && <RSSForm />}
+        </div>
+      ))}
+    </MenuContainer>
   );
 };
 
@@ -149,42 +187,6 @@ export const AddStreamMenu: FunctionComponent = () => {
             <FileMenu />
             <RSSMenu />
           </>}
-        </div>
-      ))}
-    </MenuContainer>
-  );
-};
-
-export const FileMenu: FunctionComponent = () => {
-  const [show, setShow] = useState(false);
-
-  return (
-    <MenuContainer>
-      {FileTab.map(({ tab, name, Icon }) => (
-        <div>
-          <MenuButton key={tab} onClick={() => setShow(!show)}>
-            <IconContainer><Icon /></IconContainer>
-            <TextContainer>{name}</TextContainer>
-          </MenuButton>
-          {show && <FileForm />}
-        </div>
-      ))}
-    </MenuContainer>
-  );
-};
-
-export const RSSMenu: FunctionComponent = () => {
-  const [show, setShow] = useState(false);
-
-  return (
-    <MenuContainer>
-      {RSSTab.map(({ tab, name, Icon }) => (
-        <div>
-          <MenuButton key={tab} onClick={() => setShow(!show)}>
-            <IconContainer><Icon /></IconContainer>
-            <TextContainer>{name}</TextContainer>
-          </MenuButton>
-          {show && <RSSForm />}
         </div>
       ))}
     </MenuContainer>

@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RssPodcast, PodcastType } from '../../../common/entities';
+import { standardTheme, Theme } from '../../theme';
 
 interface UserState {
   subscriptions: Record<string, PodcastType>;
-  theme: 'system' | 'light' | 'dark'
+  theme: Theme;
 }
 
 const initialState: UserState = {
   subscriptions: { },
-  theme: 'system'
+  theme: standardTheme
 };
 
 export const authenticationSlice = createSlice({

@@ -1,22 +1,20 @@
-import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
-
-import { Provider as ReduxProvider, useDispatch } from 'react-redux';
+import React, { FunctionComponent, useState, useEffect } from 'react';
+import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
-import createStore from './createStore';
+
 import { loadFromStore, saveToStore } from '../features/user/userSlice';
 
-import { AddStreamMenu } from '../features/addstream';
+import createStore from './createStore';
+import { RootState } from './rootReducer';
+import { useInterval } from '../common/hooks';
+
 import Library from '../features/library';
 import Catalog from '../features/catalog';
 import Profile from '../features/profile';
 import NavBar from '../features/navbar';
+import Player from '../features/player';
 import TabId from '../common/TabId';
-
-import { standardTheme, lightTheme, darkTheme } from "../features/theme";
-import { useInterval } from '../common/hooks';
 
 const Wrapper = styled.section`
   /* padding: 3em; */
@@ -36,72 +34,7 @@ const ActivityPane = styled.div`
 `;
 
 //react-h5-player
-const Player: FunctionComponent<{
-  audioUrl: string;
 
-  startTime?: number;
-  onTimeChanged?(time: number): void;
-}> = ({
-  audioUrl,
-
-  startTime,
-  onTimeChanged
-}) => {
-  const playerRef = useRef<AudioPlayer>(null);
-  const player = playerRef.current;
-  const audio = player?.audio.current;
-
-  const [loadedStartTime, setLoadedStartTime] = useState<boolean>(false);
-
-  return (
-    <div>
-      <AudioPlayer
-        ref={playerRef}
-        src={audioUrl}
-
-        onListen={() => onTimeChanged?.(audio!.currentTime)}
-
-        onCanPlay={() => {
-          if (startTime != null && !loadedStartTime) {
-            audio!.currentTime = startTime;
-            setLoadedStartTime(true);
-          }
-        }}
-      />
-    </div>
-  )
-};
-
-// const Button = styled.button`
-//   text-align: center;
-//   margin: 0.25rem;
-//   cursor: pointer;
-//   background: ${props => props.theme.background};
-//   color: ${props => props.theme.color};
-//   border: 2px solid ${props => props.theme.borderColor};
-//   border-radius: 3px;
-// `;
-
-const ThemeButton = styled.button`
-  text-align: center;
-  margin: 0.25rem;
-  cursor: pointer;
-  background: ${props => props.theme.background};
-  color: ${props => props.theme.color};
-  border: 2px solid ${props => props.theme.borderColor};
-  border-radius: 3px;
-`;
-
-const ThemeButtonMenu = styled.div`
-  text-align: center;
-  margin: 0.25rem;
-  background: ${props => props.theme.pageBackground};
-  color: ${props => props.theme.color};
-  border: 2px solid ${props => props.theme.borderColor};
-  border-radius: 3px;
-
-  display: inline-block;
-`;
 
 const NavBarPane = styled.div``;
 
@@ -112,21 +45,7 @@ const App: FunctionComponent = () => {
 
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
 
-  const [theme, setTheme] = useState(standardTheme);
-
-  const themeMenu = (
-    <ThemeButtonMenu>
-      <ThemeButton onClick={() => setTheme(standardTheme)}>
-        Standard Theme
-      </ThemeButton>
-      <ThemeButton onClick={() => setTheme(lightTheme)}>
-        Light Theme
-      </ThemeButton>
-      <ThemeButton onClick={() => setTheme(darkTheme)}>
-        Dark Theme
-      </ThemeButton>
-    </ThemeButtonMenu>
-  );
+  const theme = useSelector((state: RootState) => state.user.theme);
 
   useEffect(() => {
     // Try to load the user from storage when the app is mounted
@@ -139,7 +58,7 @@ const App: FunctionComponent = () => {
 
   return (
     <Wrapper>
-      <ThemeProvider theme={theme}> {/*Theme, TODO: switch between*/}
+      <ThemeProvider theme={theme}>
         <Container>
           <ActivityPane>
             <Routes>
@@ -156,9 +75,7 @@ const App: FunctionComponent = () => {
           </ActivityPane>
 
           <NavBarPane>
-            {themeMenu}
             <Player audioUrl="http://traffic.libsyn.com/joeroganexp/p1472.mp3" />
-            <AddStreamMenu />
             <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
           </NavBarPane>
         </Container>
