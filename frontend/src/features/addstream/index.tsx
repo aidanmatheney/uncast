@@ -82,6 +82,17 @@ const TabDescriptions: {
   }
 ];
 
+function onChange(event: any) {
+  var file = event.target.files[0];
+  var reader = new FileReader();
+  reader.onload = function(event) {
+    // The file's text will be printed here
+    //console.log(event.target.result)
+  };
+
+  reader.readAsText(file);
+}
+
 const FileForm: FunctionComponent = () => {
   const { register, handleSubmit } = useForm<{
     files: FileList;
@@ -96,7 +107,7 @@ const FileForm: FunctionComponent = () => {
       <Form onSubmit={onSubmit}>
         <label>
           Audio File:
-          <input type="file" name="files" ref={register} />
+          <input type="file" name="files" ref={register} onChange={onChange(event)} />
         </label>
         <input type="submit" value="Submit" />
       </Form>
