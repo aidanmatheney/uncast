@@ -15,7 +15,7 @@ import Player from '../features/player';
 import TabId from '../common/TabId';
 import { loadState, saveState } from './state';
 import catalogPodcastFeeds from '../features/catalog/catalogPodcastFeeds';
-import { catalogPodcast } from '../features/podcast/podcastSlice';
+import { catalogPodcast } from '../features/podcast/podcastSlice/';
 
 const Wrapper = styled.section`
   /* padding: 3em; */
@@ -33,9 +33,6 @@ const ActivityPane = styled.div`
   flex-grow: 1;
 
 `;
-
-//react-h5-player
-
 
 const NavBarPane = styled.div``;
 

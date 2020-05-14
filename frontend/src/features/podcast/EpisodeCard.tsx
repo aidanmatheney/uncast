@@ -47,27 +47,30 @@ const EpisodeTab: {
 const IconContainer = styled.div``;
 const TextContainer = styled.div``;
 
-const EpisodeActivities: FunctionComponent = () => {
-  return (
-    <EpisodeActivityContainer>
-      {EpisodeTab.map(({ tab, name, Icon }) => (
-        <div>
-          <EpisodeAddButton key={tab} >
-            <IconContainer><Icon /></IconContainer>
-            <TextContainer>{name}</TextContainer>
-          </EpisodeAddButton>
-        </div>
-      ))}
-    </EpisodeActivityContainer>
-  )
-}
 
+var EpisodeAudio: string = "default";
+
+export { EpisodeAudio }
 
 const EpisodeCard: FunctionComponent<{
   episode: Episode;
 }> = ({
   episode
 }) => {
+  const EpisodeActivities: FunctionComponent = () => {
+    return (
+      <EpisodeActivityContainer>
+        {EpisodeTab.map(({ tab, name, Icon }) => (
+          <div>
+            <EpisodeAddButton key={tab}>
+              <IconContainer><Icon /></IconContainer>
+              <TextContainer>{name}</TextContainer>
+            </EpisodeAddButton>
+          </div>
+        ))}
+      </EpisodeActivityContainer>
+    )
+  }
 
   return (
     <Container>

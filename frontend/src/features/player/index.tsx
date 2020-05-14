@@ -3,6 +3,8 @@ import React, { FunctionComponent, useRef, useState } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
+import { EpisodeAudio } from '../podcast/EpisodeCard'
+
 const Player: FunctionComponent<{
   audioUrl: string;
 
