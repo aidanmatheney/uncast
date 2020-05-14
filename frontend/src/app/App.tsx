@@ -115,7 +115,7 @@ const App: FunctionComponent = () => {
             <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
           </NavBarPane>
         </Container>
-      </ThemeProvider> {/*Theme, TODO: switch between*/}
+      </ThemeProvider>
     </Wrapper>
   );
 };
