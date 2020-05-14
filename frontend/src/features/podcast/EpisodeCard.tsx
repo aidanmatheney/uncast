@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlay } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib';
 
 import { Episode } from '../../common/entities';
@@ -42,12 +42,9 @@ const tabs: {
   {
     id: 'Play Episode',
     name: 'Play Episode',
-    Icon: FaPlus
+    Icon: FaPlay
   }
 ];
-
-const IconContainer = styled.div``;
-const TextContainer = styled.div``;
 
 const EpisodeCard: FunctionComponent<{
   episode: Episode;
@@ -68,8 +65,7 @@ const EpisodeCard: FunctionComponent<{
         {tabs.map(({ id: tabId, name: tabName, Icon }) => (
           <div key={tabId}>
             <EpisodeAddButton key={tabId} onClick={() => onPlaybackRequested?.(episode)}>
-              <IconContainer><Icon /></IconContainer>
-              <TextContainer>{tabName}</TextContainer>
+              <Icon />
             </EpisodeAddButton>
           </div>
         ))}
