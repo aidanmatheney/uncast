@@ -33,13 +33,13 @@ const EpisodeAddButton = styled.button`
   background: ${props => props.theme.pageBackground};
 `;
 
-const EpisodeTab: {
-  tab: string;
+const tabs: {
+  id: string;
   name: string;
   Icon: IconType;
 }[] = [
   {
-    tab: 'Play Episode',
+    id: 'Play Episode',
     name: 'Play Episode',
     Icon: FaPlus
   }
@@ -48,42 +48,28 @@ const EpisodeTab: {
 const IconContainer = styled.div``;
 const TextContainer = styled.div``;
 
-
-var EpisodeAudio: string = "default";
-
-export { EpisodeAudio }
-
 const EpisodeCard: FunctionComponent<{
   episode: Episode;
+  onPlaybackRequested?(episode: Episode): void;
 }> = ({
-  episode
+  episode,
+  onPlaybackRequested
 }) => {
-  const EpisodeActivities: FunctionComponent = () => {
-    return (
+  return (
+    <Container>
+      <div>{episode.name}</div>
+      <div><i>{episode.durationS}</i></div>
+      <div>Released: {episode.date}</div>
       <EpisodeActivityContainer>
-        {EpisodeTab.map(({ tab, name, Icon }) => (
-          <div>
-            <EpisodeAddButton key={tab} onClick={() => EpisodeAudio = episode.podcastId}>
+        {tabs.map(({ id: tabId, name: tabName, Icon }) => (
+          <div key={tabId}>
+            <EpisodeAddButton key={tabId} onClick={() => onPlaybackRequested?.(episode)}>
               <IconContainer><Icon /></IconContainer>
-              <TextContainer>{name}</TextContainer>
+              <TextContainer>{tabName}</TextContainer>
             </EpisodeAddButton>
           </div>
         ))}
       </EpisodeActivityContainer>
-    )
-  }
-
-  return (
-    <Container>
-      <pre>
-        {/*EpisodeCard: {JSON.stringify(episode)}*/}
-        {episode.name}
-        <br />
-        <i>{episode.durationS}</i>
-        <br />
-        Released: {episode.date}
-        <EpisodeActivities />
-      </pre>
     </Container>
   );
 };

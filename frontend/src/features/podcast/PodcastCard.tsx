@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import styled from 'styled-components/macro';
 import Popup from 'reactjs-popup';
 
-import { Podcast }  from '../../common/entities';
+import { Podcast, Episode }  from '../../common/entities';
 import PodcastPopupBody from './PodcastPopupBody';
 
 const Container = styled.div``;
@@ -17,13 +17,15 @@ const CardImg = styled.img`
 
 const PodcastCard: FunctionComponent<{
   podcast: Podcast;
+  onPlaybackRequested?(episode: Episode): void;
 }> = ({
-  podcast
+  podcast,
+  onPlaybackRequested
 }) => {
   return (
     <Container>
       <Popup trigger={<CardImg src={podcast.thumbnailUrl} title={podcast.name} alt={podcast.name} />} modal closeOnDocumentClick>
-        <PodcastPopupBody podcast={podcast} />
+        <PodcastPopupBody podcast={podcast} onPlaybackRequested={onPlaybackRequested} />
       </Popup>
     </Container>
   );

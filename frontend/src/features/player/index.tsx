@@ -1,19 +1,17 @@
-import React, { FunctionComponent, useRef, useState } from 'react';
+import React, { FunctionComponent, useRef, useState, useEffect } from 'react';
 
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
-import { EpisodeAudio } from '../podcast/EpisodeCard'
-
 const Player: FunctionComponent<{
-  audioUrl: string;
+  media?: {
+    url: string;
+    startTimeS?: number;
+  }
 
-  startTime?: number;
-  onTimeChanged?(time: number): void;
+  onTimeChanged?(timeS: number): void;
 }> = ({
-  audioUrl = EpisodeAudio,
-
-  startTime,
+  media,
   onTimeChanged
 }) => {
   const playerRef = useRef<AudioPlayer>(null);
@@ -21,18 +19,24 @@ const Player: FunctionComponent<{
   const audio = player?.audio.current;
 
   const [loadedStartTime, setLoadedStartTime] = useState(false);
+  useEffect(() => {
+    if (media != null) {
+      setLoadedStartTime(false);
+    }
+  }, [media])
 
   return (
     <div>
       <AudioPlayer
         ref={playerRef}
-        src={audioUrl}
+        src={media?.url}
 
         onListen={() => onTimeChanged?.(audio!.currentTime)}
 
         onCanPlay={() => {
-          if (startTime != null && !loadedStartTime) {
-            audio!.currentTime = startTime;
+          if (media?.startTimeS != null && !loadedStartTime) {
+            audio!.currentTime = media.startTimeS;
+            audio!.play();
             setLoadedStartTime(true);
           }
         }}

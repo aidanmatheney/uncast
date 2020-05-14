@@ -13,14 +13,16 @@ const CardContainer = styled.div``;
 
 const EpisodeList: FunctionComponent<{
   episodes: Episode[];
+  onPlaybackRequested?(episode: Episode): void;
 }> = ({
-  episodes
+  episodes,
+  onPlaybackRequested
 }) => {
   return (
     <Container>
       {episodes.map(episode => (
         <CardContainer key={episode.id}>
-          <EpisodeCard episode={episode} />
+          <EpisodeCard episode={episode} onPlaybackRequested={onPlaybackRequested} />
         </CardContainer>
       ))}
     </Container>

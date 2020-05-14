@@ -181,6 +181,14 @@ export const podcastSlice = createSlice({
         ...state.userPodcastStateById[id],
         subscribed: false
       }
+    },
+
+    setEpisodePlaybackPosition(state, { payload: { id, playbackMs } }: PayloadAction<{ id: string; playbackMs: number; }>) {
+      state.userEpisodeStateById[id] = {
+        ...initialUserPodcastState,
+        ...state.userEpisodeStateById[id],
+        playbackMs
+      }
     }
   },
   extraReducers: map => {
@@ -225,5 +233,6 @@ export const podcastSlice = createSlice({
 export default podcastSlice.reducer;
 
 export const {
-  unsubscribeFromPodcast
+  unsubscribeFromPodcast,
+  setEpisodePlaybackPosition
 } = podcastSlice.actions;

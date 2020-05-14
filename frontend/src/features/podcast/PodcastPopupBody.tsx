@@ -40,8 +40,10 @@ const SubscribeButton = styled.button`
 
 const PodcastPopupBody: FunctionComponent<{
   podcast: Podcast;
+  onPlaybackRequested?(episode: Episode): void;
 }> = ({
-  podcast
+  podcast,
+  onPlaybackRequested
 }) => {
   const dispatch = useDispatch();
 
@@ -64,7 +66,7 @@ const PodcastPopupBody: FunctionComponent<{
       </HeaderContainer>
       <TextContainer>
         {podcast.description && <div style={{ fontStyle: 'italic' }}>{podcast.description}</div>}
-        <div>{<EpisodeList episodes={episodes || []} />}</div>
+        <div>{<EpisodeList episodes={episodes || []} onPlaybackRequested={onPlaybackRequested} />}</div>
         <div>
           <SubscribeButton type="button" onClick={() => {
             if (subscribed) {

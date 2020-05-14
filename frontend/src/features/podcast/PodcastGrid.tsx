@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { Podcast } from '../../common/entities';
+import { Podcast, Episode } from '../../common/entities';
 import PodcastCard from './PodcastCard';
 
 const Container = styled.div`
@@ -20,14 +20,16 @@ const CardContainer = styled.div`
 
 const PodcastGrid: FunctionComponent<{
   podcasts: Podcast[];
+  onPlaybackRequested?(episode: Episode): void;
 }> = ({
-  podcasts
+  podcasts,
+  onPlaybackRequested
 }) => {
   return (
     <Container>
       {podcasts.map(p => (
         <CardContainer key={p.name}>
-          <PodcastCard podcast={p} />
+          <PodcastCard podcast={p} onPlaybackRequested={onPlaybackRequested} />
         </CardContainer>
       ))}
     </Container>

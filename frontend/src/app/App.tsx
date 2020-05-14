@@ -5,7 +5,6 @@ import styled, { ThemeProvider } from 'styled-components';
 
 import createStore from './createStore';
 import { RootState } from './rootReducer';
-import { useInterval } from '../common/hooks';
 
 import Library from '../features/library';
 import Catalog from '../features/catalog';
@@ -15,7 +14,8 @@ import Player from '../features/player';
 import TabId from '../common/TabId';
 import { loadState, saveState } from './state';
 import catalogPodcastFeeds from '../features/catalog/catalogPodcastFeeds';
-import { catalogPodcast } from '../features/podcast/podcastSlice/';
+import { catalogPodcast, setEpisodePlaybackPosition } from '../features/podcast/podcastSlice';
+import { Episode } from '../common/entities';
 
 const Wrapper = styled.section`
   /* padding: 3em; */
@@ -48,8 +48,49 @@ const App: FunctionComponent = () => {
   }, []);
 
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
-
   const theme = useSelector((state: RootState) => state.user.theme);
+
+  const userEpisodeStateById = useSelector((state: RootState) => state.podcast.userEpisodeStateById);
+
+  const [media, setMedia] = useState<{
+    episode: Episode;
+    url: string;
+    startTimeS: number;
+  } | undefined>(undefined);
+
+  const handlePlaybackRequested = (episode: Episode) => {
+    console.error('Episode playback requested:', episode);
+
+    const startTimeS = (userEpisodeStateById[episode.id]?.playbackMs) ?? 0 * 1000;
+
+    let url: string;
+    if (episode.type === 'rss') {
+      url = episode.fileUrl;
+    } else { // episode.type === 'file'
+      console.error('File episode playback requested:', episode);
+      url = 'http://example.com';
+    }
+
+    console.log('handlePlaybackRequested', {
+      episode,
+      url,
+      startTimeS
+    });
+
+    setMedia({
+      episode,
+      url,
+      startTimeS
+    });
+  };
+
+  const handlePlaybackTimeChanged = (timeS: number) => {
+    if (media == null) {
+      return;
+    }
+
+    dispatch(setEpisodePlaybackPosition({ id: media.episode.id, playbackMs: timeS * 1000 }));
+  };
 
   return (
     <Wrapper>
@@ -57,9 +98,9 @@ const App: FunctionComponent = () => {
         <Container>
           <ActivityPane>
             <Routes>
-              <Route path="/" element={<Library />} />
-              <Route path="/Library" element={<Library />} />
-              <Route path="/Catalog" element={<Catalog />} />
+              <Route path="/" element={<Library onPlaybackRequested={handlePlaybackRequested} />} />
+              <Route path="/Library" element={<Library onPlaybackRequested={handlePlaybackRequested} />} />
+              <Route path="/Catalog" element={<Catalog onPlaybackRequested={handlePlaybackRequested} />} />
               <Route path="/Profile" element={<Profile />} />
 
               <Route element={<div>
@@ -70,7 +111,7 @@ const App: FunctionComponent = () => {
           </ActivityPane>
 
           <NavBarPane>
-            <Player audioUrl="http://traffic.libsyn.com/joeroganexp/p1472.mp3" />
+            <Player media={media} onTimeChanged={handlePlaybackTimeChanged} />
             <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
           </NavBarPane>
         </Container>
