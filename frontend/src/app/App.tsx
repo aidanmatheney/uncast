@@ -61,7 +61,7 @@ const App: FunctionComponent = () => {
   const handlePlaybackRequested = (episode: Episode) => {
     console.error('Episode playback requested:', episode);
 
-    const startTimeS = (userEpisodeStateById[episode.id]?.playbackMs ?? 0) * 1000;
+    const startTimeS = (userEpisodeStateById[episode.id]?.playbackMs ?? 0) / 1000;
 
     let url: string;
     if (episode.type === 'rss') {
@@ -71,11 +71,11 @@ const App: FunctionComponent = () => {
       url = 'http://example.com';
     }
 
-    console.log('handlePlaybackRequested', {
-      episode,
-      url,
-      startTimeS
-    });
+    // console.log('handlePlaybackRequested', {
+    //   episode,
+    //   url,
+    //   startTimeS
+    // });
 
     setMedia({
       episode,

@@ -4,7 +4,7 @@ import { FaPlus } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib';
 
 import { Episode } from '../../common/entities';
-import { formatSeconds } from '../../common/utils';
+import { formatSeconds, formatUnixDate } from '../../common/utils';
 
 const Container = styled.div`
   margin: 0.25rem;
@@ -57,7 +57,7 @@ const EpisodeCard: FunctionComponent<{
   onPlaybackRequested
 }) => {
   const duration = formatSeconds(episode.durationS);
-  const date = episode.dateUnix ? new Date(episode.dateUnix).toLocaleDateString() : null;
+  const date = episode.dateUnix ? formatUnixDate(episode.dateUnix) : null;
 
   return (
     <Container>

@@ -187,6 +187,8 @@ export const podcastSlice = createSlice({
     },
 
     setEpisodePlaybackPosition(state, { payload: { id, playbackMs } }: PayloadAction<{ id: string; playbackMs: number; }>) {
+      //console.log('setEpisodePlaybackPosition', { playbackMs });
+
       state.userEpisodeStateById[id] = {
         ...initialUserPodcastState,
         ...state.userEpisodeStateById[id],
