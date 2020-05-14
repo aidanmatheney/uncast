@@ -5,8 +5,7 @@ import { Episode } from '../../common/entities';
 import EpisodeCard from './EpisodeCard';
 
 const Container = styled.div`
-  overflow: scroll;
-  max-height: 50vh; /* TODO: more elegant solution */
+  overflow-y: auto;
 `;
 
 const CardContainer = styled.div``;

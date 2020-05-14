@@ -70,8 +70,6 @@ export const registerPodcast = createAsyncThunk<Podcast, { feedUrl: string; }, T
     .elements.filter(({ type }: { type: string; }) => type === 'element')[0]
     .elements;
 
-  console.log('register RSS entries:', entries);
-
   const title: string = entries
     .find((el: any) => el.name === 'title')
     .elements[0].text;
@@ -118,7 +116,7 @@ export const subscribeToPodcast = createAsyncThunk<string, { feedUrl: string } |
   return payload.id;
 });
 
-export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: Episode[]; } | null, { podcastId: string }, ThunkApiConfig>(`${sliceName}/refreshEpisodes`, async ({ podcastId }, { getState, dispatch }) => {
+export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: Episode[]; } | null, { podcastId: string }, ThunkApiConfig>(`${sliceName}/refreshEpisodes`, async ({ podcastId }, { getState }) => {
   const state = getState();
 
   const podcast = state.podcast.podcastById[podcastId];
@@ -140,12 +138,15 @@ export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: E
     .elements.filter(({ type }: { type: string; }) => type === 'element')[0]
     .elements;
 
+
+
   const episodes: Episode[] = entries
     .filter(({ name }: { name: string; }) => name === 'item')
     .map(({ elements }: { elements: any[] }) => elements)
     .map((metas: { name: string; elements: [{ text?: string; cdata?: string; }]; attributes?: { url: string; }; }[]) => {
       const name = metas.find(({ name }) => name === 'title')!.elements[0].text!;
-      const description = metas.find(({ name }) => name === 'description')?.elements?.[0].text;
+      const descriptionEl = metas.find(({ name }) => name === 'description')?.elements?.[0];
+      const description = descriptionEl?.text ?? descriptionEl?.cdata;
       const dateString = metas.find(({ name }) => name === 'pubDate')?.elements?.[0].text;
       const dateUnix = dateString ? new Date(dateString).getTime() : undefined;
 
@@ -166,6 +167,13 @@ export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: E
         durationS
       };
       return episode;
+    });
+
+    console.log('refreshEpisodes', {
+      episodes,
+      episodesRaw: entries
+        .filter(({ name }: { name: string; }) => name === 'item')
+        .map(({ elements }: { elements: any[] }) => elements)
     });
 
     return {
@@ -194,7 +202,15 @@ export const podcastSlice = createSlice({
         ...state.userEpisodeStateById[id],
         playbackMs
       }
-    }
+    },
+
+    setEpisodeFavorite(state, { payload: { id, favorite } }: PayloadAction<{ id: string; favorite: boolean; }>) {
+      state.userEpisodeStateById[id] = {
+        ...initialUserEpisodeState,
+        ...state.userEpisodeStateById[id],
+        favorite
+      }
+    },
   },
   extraReducers: map => {
     map.addCase(registerPodcast.fulfilled, (state, { payload: podcast }) => {
@@ -239,5 +255,6 @@ export default podcastSlice.reducer;
 
 export const {
   unsubscribeFromPodcast,
-  setEpisodePlaybackPosition
+  setEpisodePlaybackPosition,
+  setEpisodeFavorite
 } = podcastSlice.actions;

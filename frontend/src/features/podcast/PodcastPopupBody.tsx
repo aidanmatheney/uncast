@@ -12,6 +12,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background: ${props => props.theme.pageBackground};
+  max-height: 90vh;
 `;
 
 const HeaderContainer = styled.div`
@@ -29,6 +30,9 @@ const HeaderTextContainer = styled.div`
 
 const TextContainer = styled.div`
   padding: .5em;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Prevent overflow */
 `;
 
 const SubscribeButton = styled.button`
@@ -47,8 +51,8 @@ const PodcastPopupBody: FunctionComponent<{
 }) => {
   const dispatch = useDispatch();
 
-  const subscribed = useSelector((state: RootState) => state.podcast.userPodcastStateById[podcast.id]?.subscribed || false);
-  const episodes: Episode[] | undefined = useSelector((state: RootState) => state.podcast.episodesByPodcastId[podcast.id]);
+  const subscribed = useSelector((state: RootState) => state.podcast.userPodcastStateById[podcast.id]?.subscribed ?? false);
+  const episodes = useSelector((state: RootState) => state.podcast.episodesByPodcastId[podcast.id] ?? []);
 
   useEffect(() => {
     dispatch(refreshEpisodes({ podcastId: podcast.id }));
@@ -60,21 +64,15 @@ const PodcastPopupBody: FunctionComponent<{
         <HeaderImg src={podcast.thumbnailUrl} alt={podcast.name} title={podcast.name} />
         <HeaderTextContainer>
           <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>{podcast.name}</div>
-          <div style={{ fontSize: '0.8em' }}>by {podcast.author}</div>
-          {podcast.url && (<div style={{ fontSize: '0.8em' }}><a href={podcast.url} target="_blank" rel="noopener noreferrer">Visit website</a></div>)}
+          <div style={{ fontSize: '.8em' }}>by {podcast.author}</div>
+          {podcast.url && (<div style={{ fontSize: '.8em' }}><a href={podcast.url} target="_blank" rel="noopener noreferrer">Visit website</a></div>)}
         </HeaderTextContainer>
       </HeaderContainer>
       <TextContainer>
-        {podcast.description && <div style={{ fontStyle: 'italic' }}>{podcast.description}</div>}
-        <div>{<EpisodeList episodes={episodes || []} onPlaybackRequested={onPlaybackRequested} />}</div>
+        {podcast.description && <div style={{ fontStyle: 'italic', fontSize: '.9em', marginBottom: '.5em' }}>{podcast.description}</div>}
+        <EpisodeList episodes={episodes} onPlaybackRequested={onPlaybackRequested} />
         <div>
-          <SubscribeButton type="button" onClick={() => {
-            if (subscribed) {
-              dispatch(unsubscribeFromPodcast({ id: podcast.id }));
-            } else {
-              dispatch(subscribeToPodcast({ id: podcast.id }));
-            }
-          }}>
+          <SubscribeButton type="button" onClick={() => dispatch((subscribed ? unsubscribeFromPodcast : subscribeToPodcast)({ id: podcast.id }))}>
             {subscribed ? 'Unsubscribe' : 'Subscribe'}
           </SubscribeButton>
         </div>
