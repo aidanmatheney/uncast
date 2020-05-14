@@ -21,20 +21,21 @@ const Img = styled.img`
 const ImgSmall = styled.img`
   max-width: 45%;
   max-height: 45%;
+  margin: 0.25rem;
 
   float: left;
+  border: 2px solid ${props => props.theme.borderColor};
   border-radius: 4px;
-  column-span: 1;
   display: grid;
 `;
 
-const PodcastMenu = styled.div`
+const PodcastDescription = styled.div`
   text-align: center;
   margin: 0.25rem;
-  background: ${props => props.theme.pageBackground};
+  background: ${props => props.theme.background};
   color: ${props => props.theme.color};
   border: 2px solid ${props => props.theme.borderColor};
-
+  border-radius: 4px;
   max-width: 45%;
   max-height: 45%;
   float: right;
@@ -42,7 +43,7 @@ const PodcastMenu = styled.div`
   display: grid;
 `;
 
-const StyledPopup = styled(Popup)`
+const StyledPopupDescription = styled.div`
   text-align: center;
   color: ${props => props.theme.pageBackground};
   font-color: ${props => props.theme.color};
@@ -53,8 +54,18 @@ const StyledPopup = styled(Popup)`
   border-radius: 4px;
 `;
 
+const StyledPopup = styled(Popup)`
+  color: ${props => props.theme.pageBackground};
+  font-color: ${props => props.theme.color};
+  width: 100%;
+  height: 100%;
+  background: ${props => props.theme.pageBackground};
+  border-radius: 4px;
+`;
+
 const SubscribeButton = styled.button`
   background: orange;
+  border-radius: 4px;
 `;
 
 const PodcastCard: FunctionComponent<{
@@ -75,9 +86,9 @@ const PodcastCard: FunctionComponent<{
         trigger={<Img src={podcast.thumbnailUrl} title={podcast.name} alt={podcast.name} />}
         closeOnDocumentClick
       >
-        <div>
+        <StyledPopupDescription>
           <ImgSmall src={podcast.thumbnailUrl} alt={podcast.name} title={podcast.name} />
-          <PodcastMenu>
+          <PodcastDescription>
             {podcast.name}
             <br />
             <a href={(podcast as RssPodcast).feedUrl} target="_blank" rel="noopener noreferrer"> View more info </a>
@@ -95,8 +106,8 @@ const PodcastCard: FunctionComponent<{
                 {subscribed ? 'Unsubscribe' : 'Subscribe'}
               </SubscribeButton>
             </div>
-          </PodcastMenu>
-        </div>
+          </PodcastDescription>
+        </StyledPopupDescription>
       </StyledPopup>
     </Container>
   );
