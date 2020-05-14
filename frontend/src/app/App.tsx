@@ -17,6 +17,8 @@ import catalogPodcastFeeds from '../features/catalog/catalogPodcastFeeds';
 import { catalogPodcast, setEpisodePlaybackPosition } from '../features/podcast/podcastSlice';
 import { Episode } from '../common/entities';
 
+import debounce from 'lodash.debounce';
+
 const Wrapper = styled.section`
   /* padding: 3em; */
   background: ${props => props.theme.pageBgColor};
@@ -37,7 +39,18 @@ const ActivityPane = styled.div`
 const NavBarPane = styled.div``;
 
 export const store = createStore(loadState());
-store.subscribe(() => saveState(store.getState()));
+const debouncedSaveState = debounce(
+  () => {
+    saveState(store.getState());
+  },
+  5000,
+  {
+    leading: true,
+    trailing: false,
+    maxWait: 5000
+  }
+);
+store.subscribe(debouncedSaveState);
 
 const App: FunctionComponent = () => {
   const dispatch = useDispatch();
