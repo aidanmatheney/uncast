@@ -7,12 +7,10 @@ import { EpisodeAudio } from '../podcast/EpisodeCard'
 
 const Player: FunctionComponent<{
   audioUrl: string;
-
   startTime?: number;
   onTimeChanged?(time: number): void;
 }> = ({
-  audioUrl = EpisodeAudio,
-
+  audioUrl,
   startTime,
   onTimeChanged
 }) => {
@@ -28,13 +26,18 @@ const Player: FunctionComponent<{
         ref={playerRef}
         src={audioUrl}
 
-        onListen={() => onTimeChanged?.(audio!.currentTime)}
+        onListen={() => {
+          onTimeChanged?.(audio!.currentTime); 
+          console.log(audioUrl);
+          console.log(EpisodeAudio);
+        }}
 
         onCanPlay={() => {
           if (startTime != null && !loadedStartTime) {
             audio!.currentTime = startTime;
             setLoadedStartTime(true);
           }
+          
         }}
       />
     </div>

@@ -49,9 +49,7 @@ const IconContainer = styled.div``;
 const TextContainer = styled.div``;
 
 
-var EpisodeAudio: string = "default";
-
-export { EpisodeAudio }
+export var EpisodeAudio: string = "default";
 
 const EpisodeCard: FunctionComponent<{
   episode: Episode;
@@ -63,7 +61,7 @@ const EpisodeCard: FunctionComponent<{
       <EpisodeActivityContainer>
         {EpisodeTab.map(({ tab, name, Icon }) => (
           <div>
-            <EpisodeAddButton key={tab} onClick={() => EpisodeAudio = episode.podcastId}>
+            <EpisodeAddButton key={tab} onClick={() => EpisodeAudio = episode.fileUrl}>
               <IconContainer><Icon /></IconContainer>
               <TextContainer>{name}</TextContainer>
             </EpisodeAddButton>

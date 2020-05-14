@@ -26,6 +26,7 @@ interface EpisodeBase {
   description?: string;
   date?: string;
   durationS: number;
+  fileUrl: string;
 }
 
 export type RssEpisode = EpisodeBase & {

@@ -13,6 +13,8 @@ import Profile from '../features/profile';
 import NavBar from '../features/navbar';
 import Player from '../features/player';
 import TabId from '../common/TabId';
+import { EpisodeAudio } from '../features/podcast/EpisodeCard' ;
+
 import { loadState, saveState } from './state';
 import catalogPodcastFeeds from '../features/catalog/catalogPodcastFeeds';
 import { catalogPodcast } from '../features/podcast/podcastSlice/';
@@ -70,11 +72,11 @@ const App: FunctionComponent = () => {
           </ActivityPane>
 
           <NavBarPane>
-            <Player audioUrl="http://traffic.libsyn.com/joeroganexp/p1472.mp3" />
+            <Player audioUrl= {EpisodeAudio}/>
             <NavBar activeTab={activeTab} onTabClick={setActiveTab} />
           </NavBarPane>
         </Container>
-      </ThemeProvider> {/*Theme, TODO: switch between*/}
+      </ThemeProvider>
     </Wrapper>
   );
 };
