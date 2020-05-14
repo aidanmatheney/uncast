@@ -36,7 +36,6 @@ const createStore = (preloadedState?: any) => {
 
   return store;
 };
+export default createStore;
 
 export type AppDispatch = ReturnType<typeof createStore>['dispatch'];
-
-export default createStore;

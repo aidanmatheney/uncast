@@ -3,8 +3,11 @@ import styled from 'styled-components/macro';
 import { xml2js } from 'xml-js';
 import { useTextFetch } from '../../common/hooks'
 import { RssPodcast, PodcastType }  from '../../common/entities';
-import Popup from 'reactjs-popup'
+import Popup from 'reactjs-popup';
 import './podcastCard.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { subscribeToPodcast, unsubscribeFromPodcast } from './podcastSlice';
+import { RootState } from '../../app/rootReducer';
 
 const Container = styled.div``;
 
@@ -40,71 +43,51 @@ const PodcastMenu = styled.div`
   display: grid;
 `;
 
+const SubscribeButton = styled.button`
+  background: orange;
+`;
+
 const PodcastCard: FunctionComponent<{
   podcast: PodcastType;
 }> = ({
   podcast
 }) => {
-  const feedUrl = (podcast as RssPodcast).feedUrl || 'https://podcasts.files.bbci.co.uk/p02nq0gn.rss'; // TODO
-  const { text: rss, isLoading } = useTextFetch(feedUrl, { });
+  const dispatch = useDispatch();
 
-  const info = useMemo(() => {
-    if (rss == null) {
-      return null;
-    }
-
-    const doc = xml2js(rss);
-    const entries = doc
-      .elements[0]
-      .elements.filter(({ type }: { type: string; }) => type === 'element')[0]
-      .elements;
-
-    try {
-      const title = entries
-      .find((el: any) => el.name === 'title')
-      .elements[0].text;
-    const url = entries
-      .find((el: any) => el.name === 'link')
-      .elements[0].text;
-    const imageUrl = entries
-      .find((el: any) => el.name === 'image')
-      .elements
-      .find((el: any) => el.name === 'url')
-      .elements[0].text;
-
-      return {
-        title,
-        url,
-        imageUrl
-      };
-    } catch (err) {
-      console.error('Error parsing feed', { err, rss, doc, entries });
-      return {
-        title: 'TITLE',
-        url: 'http://example.com'
-      }
-    }
-
-
-  }, [rss]);
+  const subscriptions = useSelector((state: RootState) => state.podcast.subscriptions);
+  const subscribed = podcast.id in subscriptions;
 
   return (
     <Container>
-      {isLoading && '?'}
-      {info && (
-        <Popup className="modal" modal trigger={<Img src={info.imageUrl} alt={info.title} title={info.title} />} closeOnDocumentClick>
+      <Popup
+        modal
+        className="modal"
+        trigger={<Img src={podcast.thumbnailUrl} title={podcast.name} alt={podcast.name} />}
+        closeOnDocumentClick
+      >
+        <div>
+          <ImgSmall src={podcast.thumbnailUrl} alt={podcast.name} title={podcast.name} />
+          <PodcastMenu>
+            {podcast.name}
+            <br />
+            <a href={(podcast as RssPodcast).feedUrl} target="_blank" rel="noopener noreferrer"> View more info </a>
+            <br />
+            description description description description description description description description description description description description description description description description
+
             <div>
-              <ImgSmall src={info.imageUrl} alt={info.title} title={info.title} />
-              <PodcastMenu>
-                {info.title}
-                <br />
-                <a href={info.url} target="_blank" rel="noopener noreferrer"> View more info </a>
-                <br />
-                description description description description description description description description description description description description description description description description
-              </PodcastMenu>
+              <SubscribeButton type="button" onClick={() => {
+                if (subscribed) {
+                  dispatch(unsubscribeFromPodcast({ id: podcast.id }))
+                } else {
+                  dispatch(subscribeToPodcast({ id: podcast.id }))
+                }
+              }}>
+                {subscribed ? 'Unsubscribe' : 'Subscribe'}
+              </SubscribeButton>
             </div>
-        </Popup>
-      )}
+          </PodcastMenu>
+        </div>
+      </Popup>
     </Container>
   );
 };

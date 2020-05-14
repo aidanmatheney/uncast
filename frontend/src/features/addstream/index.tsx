@@ -9,9 +9,9 @@ import {
 } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib';
 
-import { subscribe } from '../user/userSlice';
 import UserTabId from '../../common/UserTabId';
 import AddStreamTabId from '../../common/AddStreamTabId';
+import { subscribeToPodcast } from '../podcast/podcastSlice';
 
 const Form = styled.form`
   color: #181818;
@@ -114,12 +114,7 @@ const RSSForm: FunctionComponent = () => {
   const onSubmit = handleSubmit(({ feedUrl }) => {
     console.log('A name was submitted: ' + feedUrl);
 
-    dispatch(subscribe({
-      name: `Podcast${new Date()}`,
-      author: 'Author',
-      description: 'Description',
-      feedUrl: feedUrl
-    }));
+    dispatch(subscribeToPodcast({ feedUrl }));
   });
 
   return (

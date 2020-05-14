@@ -1,9 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useMatch } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
-
-import { loadFromStore, saveToStore } from '../features/user/userSlice';
 
 import createStore from './createStore';
 import { RootState } from './rootReducer';
@@ -15,6 +13,9 @@ import Profile from '../features/profile';
 import NavBar from '../features/navbar';
 import Player from '../features/player';
 import TabId from '../common/TabId';
+import { loadState, saveState } from './state';
+import catalogPodcastFeeds from '../features/catalog/catalogPodcastFeeds';
+import { catalogRssPodcast } from '../features/podcast/podcastSlice';
 
 const Wrapper = styled.section`
   /* padding: 3em; */
@@ -38,23 +39,20 @@ const ActivityPane = styled.div`
 
 const NavBarPane = styled.div``;
 
-export const store = createStore();
+export const store = createStore(loadState());
+store.subscribe(() => saveState(store.getState()));
 
 const App: FunctionComponent = () => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    for (const feedUrl of catalogPodcastFeeds) {
+      dispatch(catalogRssPodcast({ feedUrl }));
+    }
+  }, []);
 
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
 
   const theme = useSelector((state: RootState) => state.user.theme);
-
-  useEffect(() => {
-    // Try to load the user from storage when the app is mounted
-    dispatch(loadFromStore());
-  }, [dispatch]);
-
-  useInterval(() => {
-    dispatch(saveToStore());
-  }, 5000);
 
   return (
     <Wrapper>
@@ -64,8 +62,8 @@ const App: FunctionComponent = () => {
             <Routes>
               <Route path="/" element={<Library />} />
               <Route path="/Library" element={<Library />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/Catalog" element={<Catalog />} />
+              <Route path="/Profile" element={<Profile />} />
 
               <Route element={<div>
                 <div>Unmatched route:</div>
