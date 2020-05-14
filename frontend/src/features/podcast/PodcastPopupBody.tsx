@@ -8,6 +8,8 @@ import { RootState } from '../../app/rootReducer';
 import { unsubscribeFromPodcast, subscribeToPodcast, refreshEpisodes } from './podcastSlice';
 import EpisodeList from './EpisodeList';
 
+import './audio.jpg';
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,14 +56,31 @@ const PodcastPopupBody: FunctionComponent<{
   const subscribed = useSelector((state: RootState) => state.podcast.userPodcastStateById[podcast.id]?.subscribed ?? false);
   const episodes = useSelector((state: RootState) => state.podcast.episodesByPodcastId[podcast.id] ?? []);
 
+  function defaultCard () {
+    return (
+      <HeaderImg src="https://i.imgur.com/WwIPeBK.jpg" alt={podcast.name} title={podcast.name} />
+    )
+  }
+
+  function imageCard () {
+    return (
+      <HeaderImg src={podcast.thumbnailUrl} alt={podcast.name} title={podcast.name} />
+    )
+  }
+
   useEffect(() => {
     dispatch(refreshEpisodes({ podcastId: podcast.id }));
   }, [podcast.id, dispatch]);
 
   return (
     <Container>
-      <HeaderContainer>
-        <HeaderImg src={podcast.thumbnailUrl} alt={podcast.name} title={podcast.name} />
+      <HeaderContainer> 
+        {
+          podcast.thumbnailUrl == null && defaultCard()
+        }
+        {
+          podcast.thumbnailUrl != null && imageCard()
+        }
         <HeaderTextContainer>
           <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>{podcast.name}</div>
           <div style={{ fontSize: '.8em' }}>by {podcast.author}</div>
