@@ -6,11 +6,10 @@ import PodcastGrid from '../podcast/PodcastGrid';
 
 
 const Library: FunctionComponent = () => {
-  const { subscriptions, rssPodcastById, filePodcastById } = useSelector((state: RootState) => state.podcast);
-  console.log('Library subscriptions', subscriptions);
+  const { userPodcastStateById, podcastById } = useSelector((state: RootState) => state.podcast);
 
-  return (<PodcastGrid podcasts={Object.keys(subscriptions).map(id => {
-    return rssPodcastById[id] || filePodcastById[id] || null;
+  return (<PodcastGrid podcasts={Object.entries(userPodcastStateById).filter(([id, state]) => state.subscribed).map(([id]) => {
+    return podcastById[id] || null;
   }).filter(p => p != null)} />);
 };
 

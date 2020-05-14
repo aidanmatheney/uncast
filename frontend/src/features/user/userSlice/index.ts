@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RssPodcast, PodcastType } from '../../../common/entities';
+import { RssPodcast, Podcast } from '../../../common/entities';
 import { standardTheme, Theme } from '../../theme';
 
 interface UserState {

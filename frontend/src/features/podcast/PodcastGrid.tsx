@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { PodcastType } from '../../common/entities';
+import { Podcast } from '../../common/entities';
 import PodcastCard from './PodcastCard';
 
 const Container = styled.div`
@@ -19,7 +19,7 @@ const CardContainer = styled.div`
 `;
 
 const PodcastGrid: FunctionComponent<{
-  podcasts: PodcastType[];
+  podcasts: Podcast[];
 }> = ({
   podcasts
 }) => {

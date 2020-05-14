@@ -1,4 +1,4 @@
-export interface PodcastBase {
+interface PodcastBase {
   id: string;
   name: string;
   author?: string;
@@ -7,12 +7,35 @@ export interface PodcastBase {
   thumbnailUrl?: string;
 }
 
-export interface RssPodcast extends PodcastBase {
+export type RssPodcast = PodcastBase & {
+  type: 'rss';
   feedUrl: string;
-}
+};
 
-export interface FilePodcast extends PodcastBase {
+export type FilePodcast = PodcastBase & {
+  type: 'file';
   file: any;
+};
+
+export type Podcast = RssPodcast | FilePodcast;
+
+interface EpisodeBase {
+  id: string;
+  podcastId: string;
+  name: string;
+  description?: string;
+  date?: string;
+  durationS: number;
 }
 
-export type PodcastType = RssPodcast | FilePodcast;
+export type RssEpisode = EpisodeBase & {
+  type: 'rss';
+  fileUrl: string;
+};
+
+export type FileEpisode = EpisodeBase & {
+  type: 'file';
+  file: any;
+};
+
+export type Episode = RssEpisode | FileEpisode;

@@ -1,39 +1,67 @@
 import { createSlice, PayloadAction, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
-import { RssPodcast, FilePodcast } from '../../../common/entities';
+import { Podcast, Episode, RssPodcast, RssEpisode } from '../../../common/entities';
 import { xml2js } from 'xml-js';
 import { RootState } from '../../../app/rootReducer';
 
 const sliceName = 'podcast';
 
 interface PodcastSliceState {
-  rssPodcastById: Record<string, RssPodcast>;
-  filePodcastById: Record<string, FilePodcast>;
+  podcastById: Record<string, Podcast>;
+  episodeById: Record<string, Episode>;
+  episodesByPodcastId: Record<string, Episode[]>;
+  podcastState: Record<string, {
+    catalog: boolean;
+    lastRefreshTime: number;
+  }>;
 
-  catalog: Record<string, boolean>;
-  subscriptions: Record<string, boolean>;
+  userPodcastStateById: Record<string, {
+    subscribed: boolean;
+  }>;
+  userEpisodeStateById: Record<string, {
+    favorite: boolean;
+    playbackMs: number;
+  }>;
+  userPlaybackQueue: string[];
 }
 
 const initialState: PodcastSliceState = {
-  rssPodcastById: { },
-  filePodcastById: { },
+  podcastById: { },
+  episodeById: { },
+  episodesByPodcastId: { },
+  podcastState: { },
 
-  catalog: { },
-  subscriptions: { }
+  userPodcastStateById: { },
+  userEpisodeStateById: { },
+  userPlaybackQueue: []
+};
+
+const initialPodcastState = {
+  catalog: false,
+  lastRefreshTime: 0
+};
+
+const initialUserPodcastState = {
+  subscribed: false
+};
+
+const initialUserEpisodeState = {
+  favorite: false,
+  playbackMs: 0
 };
 
 interface ThunkApiConfig {
   state: RootState;
 }
 
-export const registerRssPodcast = createAsyncThunk<RssPodcast, { feedUrl: string; }, ThunkApiConfig>(`${sliceName}/registerRssPodcast`, async ({ feedUrl }, { getState }) => {
+export const registerPodcast = createAsyncThunk<Podcast, { feedUrl: string; }, ThunkApiConfig>(`${sliceName}/registerPodcast`, async (payload, { getState }) => {
   const state = getState();
 
-  const existingPodcast = state.podcast.rssPodcastById[feedUrl];
+  const existingPodcast = state.podcast.podcastById[payload.feedUrl];
   if (existingPodcast != null) {
     return existingPodcast;
   }
 
-  const response = await fetch(feedUrl);
+  const response = await fetch(payload.feedUrl);
   const rss = await response.text();
 
   const doc = xml2js(rss);
@@ -63,30 +91,84 @@ export const registerRssPodcast = createAsyncThunk<RssPodcast, { feedUrl: string
     .elements[0].text;
 
   const podcast: RssPodcast = {
-    id: feedUrl,
+    type: 'rss',
+    id: payload.feedUrl,
     name: title,
     author,
     description,
     url,
     thumbnailUrl: imageUrl,
-    feedUrl: feedUrl
+    feedUrl: payload.feedUrl
   };
 
   return podcast;
 });
 
-export const catalogRssPodcast = createAsyncThunk<string, { feedUrl: string }, ThunkApiConfig>(`${sliceName}/catalogRssPodcast`, async ({ feedUrl }, { getState, dispatch }) => {
-  await dispatch(registerRssPodcast({ feedUrl }));
-  return feedUrl;
+export const catalogPodcast = createAsyncThunk<Podcast, { feedUrl: string }, ThunkApiConfig>(`${sliceName}/catalogPodcast`, async ({ feedUrl }, { getState, dispatch }) => {
+  const { payload: podcast } = await dispatch(registerPodcast({ feedUrl }));
+  return podcast!;
 });
 
-export const subscribeToPodcast = createAsyncThunk<string, { feedUrl: string } | { id: string }, ThunkApiConfig>(`${sliceName}/subscribeToRssPodcast`, async (payload, { getState, dispatch }) => {
+export const subscribeToPodcast = createAsyncThunk<string, { feedUrl: string } | { id: string }, ThunkApiConfig>(`${sliceName}/subscribeToPodcast`, async (payload, { getState, dispatch }) => {
   if ('feedUrl' in payload) {
-    await dispatch(registerRssPodcast({ feedUrl: payload.feedUrl }));
+    await dispatch(registerPodcast({ feedUrl: payload.feedUrl }));
     return payload.feedUrl;
   }
 
   return payload.id;
+});
+
+export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: Episode[]; } | null, { podcastId: string }, ThunkApiConfig>(`${sliceName}/refreshEpisodes`, async ({ podcastId }, { getState, dispatch }) => {
+  const state = getState();
+
+  const podcast = state.podcast.podcastById[podcastId];
+  if (podcast.type !== 'rss') {
+    return null;
+  }
+
+  const podcastState = state.podcast.podcastState[podcastId];
+  if (podcastState?.lastRefreshTime != null && (new Date().getTime() - podcastState.lastRefreshTime) < 5 * 60 * 1000) {
+    return null;
+  }
+
+  const response = await fetch(podcast.feedUrl);
+  const rss = await response.text();
+
+  const doc = xml2js(rss);
+  const entries = doc
+    .elements[0]
+    .elements.filter(({ type }: { type: string; }) => type === 'element')[0]
+    .elements;
+
+  const episodes: Episode[] = entries
+    .filter(({ name }: { name: string; }) => name === 'item')
+    .map(({ elements }: { elements: any[] }) => elements)
+    .map((metas: { name: string; elements: [{ text?: string; cdata?: string; }]; attributes?: { url: string; }; }[]) => {
+      const name = metas.find(({ name }) => name === 'title')!.elements[0].text!;
+      const description = metas.find(({ name }) => name === 'description')?.elements?.[0].text;
+      const date = metas.find(({ name }) => name === 'pubDate')?.elements?.[0].text;
+      const durationS = Number(metas.find(({ name }) => name === 'itunes:duration')?.elements?.[0].text);
+
+      const guid = metas.find(({ name }) => name === 'guid')!.elements[0].cdata;
+      const url = metas.find(({ name }) => name === 'enclosure')!.attributes!.url;
+
+      const episode: RssEpisode = {
+        type: 'rss',
+        id: guid || url,
+        podcastId,
+        name,
+        description,
+        fileUrl: url,
+        date,
+        durationS
+      };
+      return episode;
+    });
+
+    return {
+      podcastId,
+      episodes
+    };
 });
 
 export const podcastSlice = createSlice({
@@ -94,18 +176,49 @@ export const podcastSlice = createSlice({
   initialState,
   reducers: {
     unsubscribeFromPodcast(state, { payload: { id } }: PayloadAction<{ id: string; }>) {
-      delete state.subscriptions[id];
+      state.userPodcastStateById[id] = {
+        ...initialUserPodcastState,
+        ...state.userPodcastStateById[id],
+        subscribed: false
+      }
     }
   },
   extraReducers: map => {
-    map.addCase(registerRssPodcast.fulfilled, (state, { payload: podcast }) => {
-      state.rssPodcastById[podcast.id] = podcast;
+    map.addCase(registerPodcast.fulfilled, (state, { payload: podcast }) => {
+      state.podcastById[podcast.id] = podcast;
     });
-    map.addCase(catalogRssPodcast.fulfilled, (state, { payload: feedUrl }) => {
-      state.catalog[feedUrl] = true;
+    map.addCase(catalogPodcast.fulfilled, (state, { payload: podcast }) => {
+      state.podcastState[podcast.id] = {
+        ...initialPodcastState,
+        ...state.podcastState[podcast.id],
+        catalog: true
+      };
     });
     map.addCase(subscribeToPodcast.fulfilled, (state, { payload: id }) => {
-      state.subscriptions[id] = true;
+      state.userPodcastStateById[id] = {
+        ...initialUserPodcastState,
+        ...state.userPodcastStateById[id],
+        subscribed: true
+      };
+    });
+
+    map.addCase(refreshEpisodes.fulfilled, (state, { payload }) => {
+      if (payload == null) {
+        return;
+      }
+
+      const { podcastId, episodes } = payload;
+
+      state.episodesByPodcastId[podcastId] = episodes;
+      for (const episode of episodes) {
+        state.episodeById[episode.id] = episode;
+      }
+
+      state.podcastState[podcastId] = {
+        ...initialPodcastState,
+        ...state.podcastState[podcastId],
+        lastRefreshTime: new Date().getTime()
+      }
     });
   }
 });

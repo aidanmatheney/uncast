@@ -15,7 +15,7 @@ import Player from '../features/player';
 import TabId from '../common/TabId';
 import { loadState, saveState } from './state';
 import catalogPodcastFeeds from '../features/catalog/catalogPodcastFeeds';
-import { catalogRssPodcast } from '../features/podcast/podcastSlice';
+import { catalogPodcast } from '../features/podcast/podcastSlice';
 
 const Wrapper = styled.section`
   /* padding: 3em; */
@@ -46,7 +46,7 @@ const App: FunctionComponent = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     for (const feedUrl of catalogPodcastFeeds) {
-      dispatch(catalogRssPodcast({ feedUrl }));
+      dispatch(catalogPodcast({ feedUrl }));
     }
   }, []);
 
