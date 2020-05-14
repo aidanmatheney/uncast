@@ -18,6 +18,7 @@ import { catalogPodcast, setEpisodePlaybackPosition } from '../features/podcast/
 import { Episode } from '../common/entities';
 
 import debounce from 'lodash.debounce';
+import { getUncastDbFile } from '../common/utils';
 
 const Wrapper = styled.section`
   /* padding: 3em; */
@@ -76,23 +77,23 @@ const App: FunctionComponent = () => {
 
     let url: string;
     if (episode.type === 'rss') {
-      url = episode.fileUrl;
+      setMedia({
+        episode,
+        url: episode.fileUrl,
+        startTimeS
+      });
     } else { // episode.type === 'file'
-      console.error('File episode playback requested:', episode);
-      url = 'http://example.com';
+      setMedia(undefined);
+
+      (async () => {
+        const dataUrl = await getUncastDbFile(episode.fileId);
+        setMedia({
+          episode,
+          url: dataUrl,
+          startTimeS
+        });
+      })();
     }
-
-    // console.log('handlePlaybackRequested', {
-    //   episode,
-    //   url,
-    //   startTimeS
-    // });
-
-    setMedia({
-      episode,
-      url,
-      startTimeS
-    });
   };
 
   const handlePlaybackTimeChanged = (timeS: number) => {

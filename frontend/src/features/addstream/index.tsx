@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import {
@@ -11,7 +11,9 @@ import { IconType } from 'react-icons/lib';
 
 import UserTabId from '../../common/UserTabId';
 import AddStreamTabId from '../../common/AddStreamTabId';
-import { subscribeToPodcast } from '../podcast/podcastSlice';
+import { subscribeToPodcast, addFilePodcastEpisode } from '../podcast/podcastSlice';
+import { FileEpisode, FilePodcast } from '../../common/entities';
+import { RootState } from '../../app/rootReducer';
 
 const Form = styled.form`
   color: #181818;
@@ -94,22 +96,68 @@ function onChange(event: any) {
 }
 
 const FileForm: FunctionComponent = () => {
+  const dispatch = useDispatch();
+
+  const podcastById = useSelector((state: RootState) => state.podcast.podcastById);
+  const filePodcasts = Object.values(podcastById).filter(podcast => podcast.type === 'file') as FilePodcast[];
+
   const { register, handleSubmit } = useForm<{
     files: FileList;
+    episodeName: string;
+    existingPodcastId: string;
   }>();
 
-  const onSubmit = handleSubmit(({ files }) => {
-    console.log('FileFormFC onSubmit', { files });
+  const onSubmit = handleSubmit(({ files, episodeName, existingPodcastId }) => {
+    if (files.length === 0) {
+      return;
+    }
+
+    const file = files[0];
+
+    console.log('FileForm submit:', { file, episodeName, existingPodcastId })
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+
+      dispatch(addFilePodcastEpisode({
+        dataUrl,
+        name: episodeName,
+        podcast: existingPodcastId === ''
+          ? { type: 'new', name: 'New Custom' }
+          : { type: 'existing', id: existingPodcastId }
+      }));
+    };
+    reader.readAsDataURL(file);
   });
 
   return (
     <AddContainer>
       <Form onSubmit={onSubmit}>
-        <label>
-          Audio File:
-          <input type="file" name="files" ref={register} onChange={onChange(event)} />
-        </label>
-        <input type="submit" value="Submit" />
+        <div>
+          <label>
+            Audio File:
+            <input type="file" name="files" ref={register} />
+          </label>
+        </div>
+        <div>
+          <label>
+            Episode name:
+            <input name="episodeName" ref={register} />
+          </label>
+        </div>
+        <div>
+          <label>
+            Existing podcast:
+            <select name="existingPodcastId" ref={register}>
+              <option />
+              {filePodcasts.map(podcast => (
+                <option key={podcast.id} value={podcast.id}>{podcast.name}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div><input type="submit" value="Submit" /></div>
       </Form>
     </AddContainer>
   );
@@ -147,8 +195,8 @@ const FileMenu: FunctionComponent = () => {
   return (
     <MenuContainer>
       {FileTab.map(({ tab, name, Icon }) => (
-        <div>
-          <MenuButton key={tab} onClick={() => setShow(!show)}>
+        <div key={tab}>
+          <MenuButton onClick={() => setShow(!show)}>
             <IconContainer><Icon /></IconContainer>
             <TextContainer>{name}</TextContainer>
           </MenuButton>
@@ -165,8 +213,8 @@ const RSSMenu: FunctionComponent = () => {
   return (
     <MenuContainer>
       {RSSTab.map(({ tab, name, Icon }) => (
-        <div>
-          <MenuButton key={tab} onClick={() => setShow(!show)}>
+        <div key={tab}>
+          <MenuButton onClick={() => setShow(!show)}>
             <IconContainer><Icon /></IconContainer>
             <TextContainer>{name}</TextContainer>
           </MenuButton>

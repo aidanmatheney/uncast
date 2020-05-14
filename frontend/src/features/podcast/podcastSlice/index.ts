@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { Podcast, Episode, RssPodcast, RssEpisode } from '../../../common/entities';
 import { xml2js } from 'xml-js';
+import { v4 as uuid } from 'uuid';
+
 import { RootState } from '../../../app/rootReducer';
+import { Podcast, Episode, RssPodcast, RssEpisode, FilePodcast, FileEpisode } from '../../../common/entities';
+import { putUncastDbFile } from '../../../common/utils';
 
 const sliceName = 'podcast';
 
@@ -102,12 +105,12 @@ export const registerPodcast = createAsyncThunk<Podcast, { feedUrl: string; }, T
   return podcast;
 });
 
-export const catalogPodcast = createAsyncThunk<Podcast, { feedUrl: string }, ThunkApiConfig>(`${sliceName}/catalogPodcast`, async ({ feedUrl }, { getState, dispatch }) => {
+export const catalogPodcast = createAsyncThunk<Podcast, { feedUrl: string; }, ThunkApiConfig>(`${sliceName}/catalogPodcast`, async ({ feedUrl }, { getState, dispatch }) => {
   const { payload: podcast } = await dispatch(registerPodcast({ feedUrl }));
   return podcast!;
 });
 
-export const subscribeToPodcast = createAsyncThunk<string, { feedUrl: string } | { id: string }, ThunkApiConfig>(`${sliceName}/subscribeToPodcast`, async (payload, { getState, dispatch }) => {
+export const subscribeToPodcast = createAsyncThunk<string, { feedUrl: string; } | { id: string; }, ThunkApiConfig>(`${sliceName}/subscribeToPodcast`, async (payload, { getState, dispatch }) => {
   if ('feedUrl' in payload) {
     await dispatch(registerPodcast({ feedUrl: payload.feedUrl }));
     return payload.feedUrl;
@@ -182,6 +185,52 @@ export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: E
     };
 });
 
+export const addFilePodcastEpisode = createAsyncThunk<{
+  podcast: FilePodcast;
+  episode: FileEpisode;
+}, {
+  dataUrl: string;
+  name: string;
+  podcast: { type: 'existing'; id: string; } | { type: 'new'; name: string; }
+}, ThunkApiConfig>(`${sliceName}/addFilePodcastEpisode`, async ({
+  dataUrl,
+  name,
+  podcast: podcastInfo
+}, { getState }) => {
+  const state = getState();
+
+  let podcast: FilePodcast;
+  if (podcastInfo.type === 'existing') {
+    podcast = state.podcast.podcastById[podcastInfo.id] as FilePodcast;
+  } else {
+    podcast = {
+      type: 'file',
+      id: uuid(),
+      name: podcastInfo.name
+    };
+  }
+
+  const episodeId = uuid();
+  const fileId = episodeId;
+  try {
+    await putUncastDbFile(fileId, dataUrl);
+  } catch (err) {
+    console.error('Error putting file', { err, fileId, dataUrl });
+    throw err;
+  }
+
+  const episode: FileEpisode = {
+    type: 'file',
+    id: episodeId,
+    podcastId: podcast.id,
+    name,
+    dateUnix: new Date().getTime(),
+    fileId
+  };
+
+  return { podcast, episode };
+});
+
 export const podcastSlice = createSlice({
   name: sliceName,
   initialState,
@@ -248,6 +297,21 @@ export const podcastSlice = createSlice({
         ...state.podcastState[podcastId],
         lastRefreshTime: new Date().getTime()
       }
+    });
+    map.addCase(addFilePodcastEpisode.fulfilled, (state, { payload: { podcast, episode } }) => {
+      state.podcastById[podcast.id] = podcast;
+
+      state.episodeById[episode.id] = episode;
+      state.episodesByPodcastId[podcast.id] = [
+        ...(state.episodesByPodcastId[podcast.id] ?? []),
+        episode
+      ];
+
+      state.userPodcastStateById[podcast.id] = {
+        ...initialUserPodcastState,
+        ...state.userPodcastStateById[podcast.id],
+        subscribed: true
+      };
     });
   }
 });

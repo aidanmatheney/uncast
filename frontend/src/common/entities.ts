@@ -14,7 +14,6 @@ export type RssPodcast = PodcastBase & {
 
 export type FilePodcast = PodcastBase & {
   type: 'file';
-  file: any;
 };
 
 export type Podcast = RssPodcast | FilePodcast;
@@ -25,7 +24,7 @@ interface EpisodeBase {
   name: string;
   description?: string;
   dateUnix?: number;
-  durationS: number;
+  durationS?: number;
 }
 
 export type RssEpisode = EpisodeBase & {
@@ -35,7 +34,7 @@ export type RssEpisode = EpisodeBase & {
 
 export type FileEpisode = EpisodeBase & {
   type: 'file';
-  file: any;
+  fileId: string;
 };
 
 export type Episode = RssEpisode | FileEpisode;

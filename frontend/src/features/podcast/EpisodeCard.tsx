@@ -76,7 +76,7 @@ const EpisodeCard: FunctionComponent<{
 
   const isFavorite = useSelector((state: RootState) => state.podcast.userEpisodeStateById[episode.id]?.favorite ?? false);
 
-  const duration = formatSeconds(episode.durationS);
+  const duration = formatSeconds(episode.durationS ?? 0);
   const date = episode.dateUnix ? formatUnixDate(episode.dateUnix) : null;
 
   const [truncateDescription, setTruncateDescription] = useState(true);
