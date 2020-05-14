@@ -105,16 +105,17 @@ const FileForm: FunctionComponent = () => {
     files: FileList;
     episodeName: string;
     existingPodcastId: string;
+    newPodcastName: string;
   }>();
 
-  const onSubmit = handleSubmit(({ files, episodeName, existingPodcastId }) => {
+  const onSubmit = handleSubmit(({ files, episodeName, existingPodcastId, newPodcastName }) => {
     if (files.length === 0) {
       return;
     }
 
     const file = files[0];
 
-    console.log('FileForm submit:', { file, episodeName, existingPodcastId })
+    console.log('FileForm submit:', { file, episodeName, existingPodcastId, newPodcastName })
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -124,7 +125,7 @@ const FileForm: FunctionComponent = () => {
         dataUrl,
         name: episodeName,
         podcast: existingPodcastId === ''
-          ? { type: 'new', name: 'New Custom' }
+          ? { type: 'new', name: newPodcastName }
           : { type: 'existing', id: existingPodcastId }
       }));
     };
@@ -148,7 +149,13 @@ const FileForm: FunctionComponent = () => {
         </div>
         <div>
           <label>
-            Existing podcast:
+            New podcast name:
+            <input name="newPodcastName" ref={register} />
+          </label>
+        </div>
+        <div>
+          <label>
+            Add to podcast:
             <select name="existingPodcastId" ref={register}>
               <option />
               {filePodcasts.map(podcast => (
