@@ -1,9 +1,10 @@
 export interface PodcastBase {
   id: string;
   name: string;
-  author: string;
-  description: string;
-  thumbnailUrl: string;
+  author?: string;
+  description?: string;
+  url?: string;
+  thumbnailUrl?: string;
 }
 
 export interface RssPodcast extends PodcastBase {

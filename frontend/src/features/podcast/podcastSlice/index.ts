@@ -47,6 +47,12 @@ export const registerRssPodcast = createAsyncThunk<RssPodcast, { feedUrl: string
   const title: string = entries
     .find((el: any) => el.name === 'title')
     .elements[0].text;
+  const description: string = entries
+    .find((el: any) => el.name === 'description')
+    .elements[0].text;
+  const author: string = entries
+    .find((el: any) => el.name === 'itunes:author')
+    .elements[0].text;
   const url: string = entries
     .find((el: any) => el.name === 'link')
     .elements[0].text;
@@ -59,8 +65,9 @@ export const registerRssPodcast = createAsyncThunk<RssPodcast, { feedUrl: string
   const podcast: RssPodcast = {
     id: feedUrl,
     name: title,
-    author: '',
-    description: '',
+    author,
+    description,
+    url,
     thumbnailUrl: imageUrl,
     feedUrl: feedUrl
   };

@@ -41,6 +41,8 @@ const PodcastDescription = styled.div`
   float: right;
   word-wrap: normal;
   display: grid;
+
+  padding: 4px;
 `;
 
 const StyledPopupDescription = styled.div`
@@ -66,6 +68,8 @@ const StyledPopup = styled(Popup)`
 const SubscribeButton = styled.button`
   background: orange;
   border-radius: 4px;
+
+  margin-top: .5em;
 `;
 
 const PodcastCard: FunctionComponent<{
@@ -89,12 +93,10 @@ const PodcastCard: FunctionComponent<{
         <StyledPopupDescription>
           <ImgSmall src={podcast.thumbnailUrl} alt={podcast.name} title={podcast.name} />
           <PodcastDescription>
-            {podcast.name}
-            <br />
-            <a href={(podcast as RssPodcast).feedUrl} target="_blank" rel="noopener noreferrer"> View more info </a>
-            <br />
-            description description description description description description description description description description description description description description description description
-
+            <div>{podcast.name}</div>
+            <div style={{ fontSize: '0.8em' }}>by {podcast.author}</div>
+            {podcast.description && <div>{podcast.description}</div>}
+            {podcast.url && (<a href={podcast.url} target="_blank" rel="noopener noreferrer">View more info</a>)}
             <div>
               <SubscribeButton type="button" onClick={() => {
                 if (subscribed) {
