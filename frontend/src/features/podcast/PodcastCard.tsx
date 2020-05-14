@@ -4,7 +4,6 @@ import { xml2js } from 'xml-js';
 import { useTextFetch } from '../../common/hooks'
 import { RssPodcast, PodcastType }  from '../../common/entities';
 import Popup from 'reactjs-popup';
-import './podcastCard.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { subscribeToPodcast, unsubscribeFromPodcast } from './podcastSlice';
 import { RootState } from '../../app/rootReducer';
@@ -43,6 +42,17 @@ const PodcastMenu = styled.div`
   display: grid;
 `;
 
+const StyledPopup = styled(Popup)`
+  text-align: center;
+  color: ${props => props.theme.pageBackground};
+  font-color: ${props => props.theme.color};
+  font-size: 1em;
+  width: 100%;
+  height: 100%;
+  background: ${props => props.theme.pageBackground};
+  border-radius: 4px;
+`;
+
 const SubscribeButton = styled.button`
   background: orange;
 `;
@@ -59,7 +69,7 @@ const PodcastCard: FunctionComponent<{
 
   return (
     <Container>
-      <Popup
+      <StyledPopup
         modal
         className="modal"
         trigger={<Img src={podcast.thumbnailUrl} title={podcast.name} alt={podcast.name} />}
@@ -87,7 +97,7 @@ const PodcastCard: FunctionComponent<{
             </div>
           </PodcastMenu>
         </div>
-      </Popup>
+      </StyledPopup>
     </Container>
   );
 };
