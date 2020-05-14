@@ -26,6 +26,7 @@ const EpisodeActivityContainer = styled.div`
 const EpisodeAddButton = styled.button`
   margin: 0.25rem;
   color: ${props => props.theme.color};
+  cursor: pointer;
   font-size: 1em;
   text-align: center;
   border-radius: 3px;
@@ -62,7 +63,7 @@ const EpisodeCard: FunctionComponent<{
       <EpisodeActivityContainer>
         {EpisodeTab.map(({ tab, name, Icon }) => (
           <div>
-            <EpisodeAddButton key={tab}>
+            <EpisodeAddButton key={tab} onClick={() => EpisodeAudio = episode.podcastId}>
               <IconContainer><Icon /></IconContainer>
               <TextContainer>{name}</TextContainer>
             </EpisodeAddButton>

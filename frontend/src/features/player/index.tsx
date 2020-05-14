@@ -11,7 +11,7 @@ const Player: FunctionComponent<{
   startTime?: number;
   onTimeChanged?(time: number): void;
 }> = ({
-  audioUrl,
+  audioUrl = EpisodeAudio,
 
   startTime,
   onTimeChanged
