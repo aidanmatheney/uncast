@@ -74,12 +74,12 @@ const EpisodeCard: FunctionComponent<{
 }) => {
   const dispatch = useDispatch();
 
-  const duration = formatSeconds(episode.durationS ?? 0);
-  const date = episode.dateUnix ? formatUnixDate(episode.dateUnix) : null;
-
   const isFavorite = useSelector((state: RootState) => state.podcast.userEpisodeStateById[episode.id]?.favorite ?? false);
 
   const [truncateDescription, setTruncateDescription] = useState(true);
+
+  const duration = formatSeconds(episode.durationS ?? 0);
+  const date = episode.dateUnix ? formatUnixDate(episode.dateUnix) : null;
 
   const actions: {
     id: string;
@@ -123,7 +123,8 @@ const EpisodeCard: FunctionComponent<{
             <div style={{ fontStyle: 'italic' }}>
               No episode notes.
             </div>
-          )}
+          )
+        }
       </DetailsContainer>
       <ActionsContainer>
         {actions.map(({ id, title, invoke, Icon }) => (
