@@ -8,6 +8,7 @@ import { formatSeconds, formatUnixDate } from '../../common/utils';
 
 const Container = styled.div`
   margin: 0.25rem;
+  padding: 0.25rem;
   color: ${props => props.theme.color};
   font-size: 1em;
   text-align: left;
@@ -58,7 +59,7 @@ const EpisodeCard: FunctionComponent<{
 
   return (
     <Container>
-      <div>{episode.name}</div>
+      <div><b>{episode.name}</b></div>
       <div><i>{duration}</i></div>
       {date && (<div>Released: {date}</div>)}
       <EpisodeActivityContainer>
