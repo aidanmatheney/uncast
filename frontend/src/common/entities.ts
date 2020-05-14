@@ -24,7 +24,7 @@ interface EpisodeBase {
   podcastId: string;
   name: string;
   description?: string;
-  date?: string;
+  dateUnix?: number;
   durationS: number;
 }
 

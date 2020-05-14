@@ -4,6 +4,7 @@ import { FaPlus } from 'react-icons/fa';
 import { IconType } from 'react-icons/lib';
 
 import { Episode } from '../../common/entities';
+import { formatSeconds } from '../../common/utils';
 
 const Container = styled.div`
   margin: 0.25rem;
@@ -55,11 +56,14 @@ const EpisodeCard: FunctionComponent<{
   episode,
   onPlaybackRequested
 }) => {
+  const duration = formatSeconds(episode.durationS);
+  const date = episode.dateUnix ? new Date(episode.dateUnix).toLocaleDateString() : null;
+
   return (
     <Container>
       <div>{episode.name}</div>
-      <div><i>{episode.durationS}</i></div>
-      <div>Released: {episode.date}</div>
+      <div><i>{duration}</i></div>
+      {date && (<div>Released: {date}</div>)}
       <EpisodeActivityContainer>
         {tabs.map(({ id: tabId, name: tabName, Icon }) => (
           <div key={tabId}>

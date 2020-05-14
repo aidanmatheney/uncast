@@ -61,7 +61,7 @@ const App: FunctionComponent = () => {
   const handlePlaybackRequested = (episode: Episode) => {
     console.error('Episode playback requested:', episode);
 
-    const startTimeS = (userEpisodeStateById[episode.id]?.playbackMs) ?? 0 * 1000;
+    const startTimeS = (userEpisodeStateById[episode.id]?.playbackMs ?? 0) * 1000;
 
     let url: string;
     if (episode.type === 'rss') {
@@ -127,5 +127,4 @@ const WrappedApp: typeof App = props => (
     </BrowserRouter>
   </ReduxProvider>
 );
-
 export default WrappedApp;

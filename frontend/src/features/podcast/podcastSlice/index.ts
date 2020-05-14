@@ -146,8 +146,11 @@ export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: E
     .map((metas: { name: string; elements: [{ text?: string; cdata?: string; }]; attributes?: { url: string; }; }[]) => {
       const name = metas.find(({ name }) => name === 'title')!.elements[0].text!;
       const description = metas.find(({ name }) => name === 'description')?.elements?.[0].text;
-      const date = metas.find(({ name }) => name === 'pubDate')?.elements?.[0].text;
-      const durationS = Number(metas.find(({ name }) => name === 'itunes:duration')?.elements?.[0].text);
+      const dateString = metas.find(({ name }) => name === 'pubDate')?.elements?.[0].text;
+      const dateUnix = dateString ? new Date(dateString).getTime() : undefined;
+
+      const durationString = metas.find(({ name }) => name === 'itunes:duration')?.elements?.[0].text!;
+      const durationS = durationString.split(':').map((part, index, arr) => Number(part) * Math.pow(60, arr.length - index - 1)).reduce((a, c) => a + c);
 
       const guid = metas.find(({ name }) => name === 'guid')!.elements[0].cdata;
       const url = metas.find(({ name }) => name === 'enclosure')!.attributes!.url;
@@ -159,7 +162,7 @@ export const refreshEpisodes = createAsyncThunk<{ podcastId: string; episodes: E
         name,
         description,
         fileUrl: url,
-        date,
+        dateUnix,
         durationS
       };
       return episode;
