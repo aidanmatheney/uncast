@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { Podcast, Episode, RssPodcast, RssEpisode } from '../../../common/entities';
 import { xml2js } from 'xml-js';
 import { RootState } from '../../../app/rootReducer';
@@ -190,7 +190,7 @@ export const podcastSlice = createSlice({
       //console.log('setEpisodePlaybackPosition', { playbackMs });
 
       state.userEpisodeStateById[id] = {
-        ...initialUserPodcastState,
+        ...initialUserEpisodeState,
         ...state.userEpisodeStateById[id],
         playbackMs
       }

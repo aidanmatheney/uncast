@@ -1,5 +1,5 @@
 
-import React, { FunctionComponent, useMemo, useEffect } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -52,7 +52,7 @@ const PodcastPopupBody: FunctionComponent<{
 
   useEffect(() => {
     dispatch(refreshEpisodes({ podcastId: podcast.id }));
-  }, [podcast.id]);
+  }, [podcast.id, dispatch]);
 
   return (
     <Container>

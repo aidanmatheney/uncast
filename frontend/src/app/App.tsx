@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter, Routes, Route, useMatch } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import styled, { ThemeProvider } from 'styled-components';
 
 import createStore from './createStore';
@@ -58,7 +58,7 @@ const App: FunctionComponent = () => {
     for (const feedUrl of catalogPodcastFeeds) {
       dispatch(catalogPodcast({ feedUrl }));
     }
-  }, []);
+  }, [dispatch]);
 
   const [activeTab, setActiveTab] = useState<TabId>(TabId.Library);
   const theme = useSelector((state: RootState) => state.user.theme);
@@ -72,8 +72,6 @@ const App: FunctionComponent = () => {
   } | undefined>(undefined);
 
   const handlePlaybackRequested = (episode: Episode) => {
-    console.error('Episode playback requested:', episode);
-
     const startTimeS = (userEpisodeStateById[episode.id]?.playbackMs ?? 0) / 1000;
 
     let url: string;
